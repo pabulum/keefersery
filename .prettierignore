@@ -1,0 +1,11 @@
+# Build output
+dist/
+.astro/
+
+# Lockfile — npm owns its formatting
+package-lock.json
+
+# Written by src/lib/github.ts on every build. It's a generated fallback snapshot,
+# not source, so the writer owns its formatting. Formatting it here just creates
+# a diff that the next build reverts.
+src/data/activity-cache.json
