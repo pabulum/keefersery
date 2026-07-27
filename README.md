@@ -28,12 +28,12 @@ npm run check    # astro check (types + template diagnostics)
 
 ## Editing content
 
-| What | Where |
-| --- | --- |
-| Name, role, email, profile links | `src/data/site.ts` |
-| Project cards (tagline, insight, stack) | `src/data/projects.ts` |
-| Homepage intro copy | `src/pages/index.astro` |
-| Posts | `src/content/writing/*.md` |
+| What                                    | Where                      |
+| --------------------------------------- | -------------------------- |
+| Name, role, email, profile links        | `src/data/site.ts`         |
+| Project cards (tagline, insight, stack) | `src/data/projects.ts`     |
+| Homepage intro copy                     | `src/pages/index.astro`    |
+| Posts                                   | `src/content/writing/*.md` |
 
 New post: drop a markdown file in `src/content/writing/` with `title`, `description`,
 and `date` frontmatter. It appears in the feed, the writing index, and the RSS feed
@@ -48,7 +48,7 @@ slightly stale numbers instead of failing. Don't add it to `.gitignore`.
 `.github/workflows/deploy.yml` builds and publishes to Cloudflare Pages on push to
 `main` and daily at 06:00 UTC. It needs two repo secrets:
 
-- `CLOUDFLARE_API_TOKEN` — token with the *Cloudflare Pages: Edit* permission
+- `CLOUDFLARE_API_TOKEN` — token with the _Cloudflare Pages: Edit_ permission
 - `CLOUDFLARE_ACCOUNT_ID` — from the Cloudflare dashboard sidebar
 
 `GITHUB_TOKEN` is injected automatically and raises the API rate limit to 5000/hr.

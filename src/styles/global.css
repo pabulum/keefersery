@@ -9,10 +9,11 @@
 :root {
   /* Type */
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   --font-mono:
-    ui-monospace, 'SF Mono', 'JetBrains Mono', 'IBM Plex Mono', Menlo, Consolas, monospace;
+    ui-monospace, "SF Mono", "JetBrains Mono", "IBM Plex Mono", Menlo, Consolas,
+    monospace;
 
   /* A 1.2 modular scale, clamped so the page reads well from 360px to 1600px. */
   --step--1: clamp(0.79rem, 0.77rem + 0.1vw, 0.84rem);
@@ -46,7 +47,8 @@
   --text-faint: #8b8d95;
   --accent: #1f5f9e;
   --accent-soft: #e8f0f8;
-  --shadow: 0 1px 2px rgb(20 20 26 / 0.05), 0 4px 16px -8px rgb(20 20 26 / 0.12);
+  --shadow:
+    0 1px 2px rgb(20 20 26 / 0.05), 0 4px 16px -8px rgb(20 20 26 / 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -120,7 +122,9 @@ a {
   text-decoration-color: color-mix(in srgb, var(--accent) 32%, transparent);
   text-underline-offset: 0.18em;
   text-decoration-thickness: 1px;
-  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+  transition:
+    text-decoration-color 0.15s ease,
+    color 0.15s ease;
 }
 
 a:hover {
@@ -199,7 +203,7 @@ hr {
 }
 
 .site-nav a:hover,
-.site-nav a[aria-current='page'] {
+.site-nav a[aria-current="page"] {
   color: var(--text);
 }
 
@@ -298,7 +302,9 @@ main {
   text-decoration: none;
   color: var(--text-muted);
   background: var(--surface);
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .intro__links a:hover {
@@ -402,7 +408,7 @@ main {
 }
 
 .meta__dot::before {
-  content: '·';
+  content: "·";
   margin-right: var(--space-xs);
 }
 
@@ -422,7 +428,7 @@ main {
   fill: var(--border-strong);
 }
 
-.sparkline rect[data-hot='true'] {
+.sparkline rect[data-hot="true"] {
   fill: var(--accent);
 }
 

@@ -17,7 +17,7 @@ out because it generalizes well past video games.
 
 In Deadlock, items cost souls, and souls accumulate as you win fights. So the players
 who buy a 6,000-soul item are, by construction, players who were doing well enough to
-afford one. The item didn't cause that. The item is a *receipt* for it.
+afford one. The item didn't cause that. The item is a _receipt_ for it.
 
 You can put a number on how bad this is. For each purchase, you can ask what the buyer's
 win probability already was at the moment they bought — from net worth, objectives, and
@@ -50,7 +50,7 @@ at all.
 **Ranking items and building a build are different operations.** Even with perfectly
 unconfounded per-item scores, taking the top six does not give you a good build. Items
 compete for the same souls, so a set of six is subject to a budget constraint the
-individual scores know nothing about. Worse, items *interact*: two items may each score
+individual scores know nothing about. Worse, items _interact_: two items may each score
 well and be near-substitutes, so that owning both is barely better than owning one.
 Independent scores cannot see either fact — a ranking has no notion of a set.
 
@@ -67,7 +67,7 @@ The output is a set that satisfies a constraint, not a list sorted by a column.
 Both halves of this reduce to the same discipline, and it's the one I keep returning to:
 
 > The number that's easy to compute is rarely the number you care about. Before
-> optimizing anything, work out what the easy number is *actually* measuring.
+> optimizing anything, work out what the easy number is _actually_ measuring.
 
 Raw win rate was measuring purchase timing. A top-six list was measuring six unrelated
 questions instead of one joint one. Neither error is exotic; both are invisible if you
