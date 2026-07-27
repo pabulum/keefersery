@@ -1,0 +1,1252 @@
+{
+  "pabulum/SlowYourRoll": {
+    "repo": "pabulum/SlowYourRoll",
+    "description": "Bonus-roll expected-value tracker for World of Warcraft",
+    "stars": 0,
+    "language": "JavaScript",
+    "commits": [
+      {
+        "sha": "5e62608a534a4f1e79527728ada6e811c809ef73",
+        "shortSha": "5e62608",
+        "message": "Fix amiguous spec (e.g. Holy)",
+        "title": "Fix amiguous spec (e.g. Holy)",
+        "date": "2026-07-27T14:04:54Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/5e62608a534a4f1e79527728ada6e811c809ef73",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "5e857ca4ade5b2fad05fbc2f2b1ce48d71504a1c",
+        "shortSha": "5e857ca",
+        "message": "Fix percentage QELive reports; accommodate loot spec from simc",
+        "title": "Fix percentage QELive reports; accommodate loot spec from simc",
+        "date": "2026-07-27T13:27:29Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/5e857ca4ade5b2fad05fbc2f2b1ce48d71504a1c",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "5853264aac4ef4cc50cb696945c2cabb4c4077c5",
+        "shortSha": "5853264",
+        "message": "Refine copy; emojis to SVGs",
+        "title": "Refine copy; emojis to SVGs",
+        "date": "2026-07-27T02:12:53Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/5853264aac4ef4cc50cb696945c2cabb4c4077c5",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "8b619bd0ae32bd69d226e3a8bddfe45846492d07",
+        "shortSha": "8b619bd",
+        "message": "Performance improvements",
+        "title": "Performance improvements",
+        "date": "2026-07-25T00:48:26Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/8b619bd0ae32bd69d226e3a8bddfe45846492d07",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "b34493fd1c25e42e7d552fd524099e51d0665116",
+        "shortSha": "b34493f",
+        "message": "Shine",
+        "title": "Shine",
+        "date": "2026-07-24T23:33:48Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/b34493fd1c25e42e7d552fd524099e51d0665116",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "67e5baabe23d24c3f0182bee8f57223624db2195",
+        "shortSha": "67e5baa",
+        "message": "Visual redesign",
+        "title": "Visual redesign",
+        "date": "2026-07-24T18:27:27Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/67e5baabe23d24c3f0182bee8f57223624db2195",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "50b41719d5cf2824de0a5c4435f900ee24a18941",
+        "shortSha": "50b4171",
+        "message": "Structural escapes; Element IDs typed; linkedom",
+        "title": "Structural escapes; Element IDs typed; linkedom",
+        "date": "2026-07-24T17:24:59Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/50b41719d5cf2824de0a5c4435f900ee24a18941",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "8640ab0e087e1de3ce5bd13be96526d0c261f8a5",
+        "shortSha": "8640ab0",
+        "message": "Opengraph and shareable reports",
+        "title": "Opengraph and shareable reports",
+        "date": "2026-07-24T00:01:50Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/8640ab0e087e1de3ce5bd13be96526d0c261f8a5",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "312565edd9a61e8db7e66f887074940da405081e",
+        "shortSha": "312565e",
+        "message": "Don't put the display typeface on the badges",
+        "title": "Don't put the display typeface on the badges",
+        "date": "2026-07-23T23:17:47Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/312565edd9a61e8db7e66f887074940da405081e",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "400f321b517b612e4caf6a1bd7704ba5729cc4fd",
+        "shortSha": "400f321",
+        "message": "Inter & Space Grotesk typefaces",
+        "title": "Inter & Space Grotesk typefaces",
+        "date": "2026-07-23T23:12:52Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/400f321b517b612e4caf6a1bd7704ba5729cc4fd",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "b6b45dfbd17b23abb9fb314c94585a2983eaee0b",
+        "shortSha": "b6b45df",
+        "message": "Better selection for previously loaded reports",
+        "title": "Better selection for previously loaded reports",
+        "date": "2026-07-23T22:59:49Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/b6b45dfbd17b23abb9fb314c94585a2983eaee0b",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "5193e8740841eec2b9d74437cfafc46713c21a0c",
+        "shortSha": "5193e87",
+        "message": "Crest savings & 9/6 rewarding encounters",
+        "title": "Crest savings & 9/6 rewarding encounters",
+        "date": "2026-07-23T22:40:31Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/5193e8740841eec2b9d74437cfafc46713c21a0c",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "aaad0afebc992040c8ae268e0fd99373964fb8ef",
+        "shortSha": "aaad0af",
+        "message": "Taking an item from the vault will leave it in the pool - take that into account",
+        "title": "Taking an item from the vault will leave it in the pool - take that into account",
+        "date": "2026-07-23T21:45:03Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/aaad0afebc992040c8ae268e0fd99373964fb8ef",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "a428600f1ddc24444ae7e49e79d56cb2e1906de6",
+        "shortSha": "a428600",
+        "message": "Compare vault item to rolling",
+        "title": "Compare vault item to rolling",
+        "date": "2026-07-23T21:40:13Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/a428600f1ddc24444ae7e49e79d56cb2e1906de6",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "bbcea6ca2c01fcbf7cdc613de4a6288393724d7f",
+        "shortSha": "bbcea6c",
+        "message": "Try to keep season-specific information softcoded",
+        "title": "Try to keep season-specific information softcoded",
+        "date": "2026-07-23T21:20:48Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/bbcea6ca2c01fcbf7cdc613de4a6288393724d7f",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "4add34ae71e5243d397ab0001b31d5a5487ff747",
+        "shortSha": "4add34a",
+        "message": "Properly filter items; make recommendations for loot spec; wowhead cards",
+        "title": "Properly filter items; make recommendations for loot spec; wowhead cards",
+        "date": "2026-07-22T04:54:14Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/4add34ae71e5243d397ab0001b31d5a5487ff747",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "00dfcd4da6d56da397d3bab5ab664acc516c602b",
+        "shortSha": "00dfcd4",
+        "message": "Non-rollable encounters",
+        "title": "Non-rollable encounters",
+        "date": "2026-07-22T01:56:33Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/00dfcd4da6d56da397d3bab5ab664acc516c602b",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "25faaf8e127ccc91858842ebd7a7c016a11e86de",
+        "shortSha": "25faaf8",
+        "message": "Bump Node requirements",
+        "title": "Bump Node requirements",
+        "date": "2026-07-22T01:05:25Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/25faaf8e127ccc91858842ebd7a7c016a11e86de",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "a4e18e69893dcb0817dcb77e36b3e93418500592",
+        "shortSha": "a4e18e6",
+        "message": "Fix Very Rare descriptions",
+        "title": "Fix Very Rare descriptions",
+        "date": "2026-07-22T00:55:04Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/a4e18e69893dcb0817dcb77e36b3e93418500592",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "507baef040e1de12e2d7442485a5c5e48d89044a",
+        "shortSha": "507baef",
+        "message": "Ignore trash loot, better parsing of vault",
+        "title": "Ignore trash loot, better parsing of vault",
+        "date": "2026-07-21T22:07:32Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/507baef040e1de12e2d7442485a5c5e48d89044a",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "4d92156ef63d9b7f897b34786a851316463ac9e4",
+        "shortSha": "4d92156",
+        "message": "Strip python out of the serve",
+        "title": "Strip python out of the serve",
+        "date": "2026-07-21T21:16:35Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/4d92156ef63d9b7f897b34786a851316463ac9e4",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "30a61188b94a99756c6191bf732c3c4b6aa817a1",
+        "shortSha": "30a6118",
+        "message": "Attempt to future-proof for Season 2",
+        "title": "Attempt to future-proof for Season 2",
+        "date": "2026-07-21T21:04:58Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/30a61188b94a99756c6191bf732c3c4b6aa817a1",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "c1a32cd194ee3b7258223f8520a127502615c8ca",
+        "shortSha": "c1a32cd",
+        "message": "Node-ify",
+        "title": "Node-ify",
+        "date": "2026-07-21T01:27:49Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/c1a32cd194ee3b7258223f8520a127502615c8ca",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "0386f9b18a04af1b9f59a664c3cfce18247044ca",
+        "shortSha": "0386f9b",
+        "message": "Droptimizer",
+        "title": "Droptimizer",
+        "date": "2026-07-20T16:10:39Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/0386f9b18a04af1b9f59a664c3cfce18247044ca",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "9e30ca7e60de6f5895c82e5a133be96557a831c0",
+        "shortSha": "9e30ca7",
+        "message": "Initial commit",
+        "title": "Initial commit",
+        "date": "2026-07-20T13:30:56Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/9e30ca7e60de6f5895c82e5a133be96557a831c0",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      }
+    ],
+    "commitCount": 25,
+    "lastCommit": "2026-07-27T14:04:54Z",
+    "firstCommit": "2026-07-20T13:30:56Z",
+    "recentCommitCount": 25,
+    "weeklyHistogram": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      24
+    ]
+  },
+  "pabulum/vibelock": {
+    "repo": "pabulum/vibelock",
+    "description": "Data-driven Deadlock build generator — phased, annotated item builds with the win-rate numbers behind every pick.",
+    "stars": 0,
+    "language": "TypeScript",
+    "commits": [
+      {
+        "sha": "50558fd46d9942f9928225d44423ec75e4f0ef68",
+        "shortSha": "50558fd",
+        "message": "Make ability icon colors consistent",
+        "title": "Make ability icon colors consistent",
+        "date": "2026-07-25T04:42:34Z",
+        "url": "https://github.com/pabulum/vibelock/commit/50558fd46d9942f9928225d44423ec75e4f0ef68",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "06903da7fdaa4d97569bcaa890823f3f98bf2a67",
+        "shortSha": "06903da",
+        "message": "Prettier; analytics cache; archetype-flow parallelization; abort requests when changing options",
+        "title": "Prettier; analytics cache; archetype-flow parallelization; abort requests when changing options",
+        "date": "2026-07-25T04:22:46Z",
+        "url": "https://github.com/pabulum/vibelock/commit/06903da7fdaa4d97569bcaa890823f3f98bf2a67",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "8780cb8a008e04b4e1105728744d0a87545c2541",
+        "shortSha": "8780cb8",
+        "message": "Debounce & prefetch",
+        "title": "Debounce & prefetch",
+        "date": "2026-07-25T02:27:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/8780cb8a008e04b4e1105728744d0a87545c2541",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "10c45caba05827e7861d30554652a8f6ad355f29",
+        "shortSha": "10c45ca",
+        "message": "Visual redesign",
+        "title": "Visual redesign",
+        "date": "2026-07-24T20:03:47Z",
+        "url": "https://github.com/pabulum/vibelock/commit/10c45caba05827e7861d30554652a8f6ad355f29",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "a8353351a0f2534b2606d70c1f818a5076418208",
+        "shortSha": "a835335",
+        "message": "Indicate whether a \"patch mover\" was actually changed in the patch",
+        "title": "Indicate whether a \"patch mover\" was actually changed in the patch",
+        "date": "2026-07-19T20:32:47Z",
+        "url": "https://github.com/pabulum/vibelock/commit/a8353351a0f2534b2606d70c1f818a5076418208",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "e8403049ba27a98b770ec88f483d9ef2756bb880",
+        "shortSha": "e840304",
+        "message": "Harden harvesting script to help prevent failures",
+        "title": "Harden harvesting script to help prevent failures",
+        "date": "2026-07-19T01:13:39Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e8403049ba27a98b770ec88f483d9ef2756bb880",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "0a164ee44386e77b4345b370c28d11570a612089",
+        "shortSha": "0a164ee",
+        "message": "Allow adding multiple counters from base command palette when using vs",
+        "title": "Allow adding multiple counters from base command palette when using vs",
+        "date": "2026-07-18T19:20:01Z",
+        "url": "https://github.com/pabulum/vibelock/commit/0a164ee44386e77b4345b370c28d11570a612089",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "d465184bb908fed2a0a1dba5388a9564916488f2",
+        "shortSha": "d465184",
+        "message": "Fix comments after refactor",
+        "title": "Fix comments after refactor",
+        "date": "2026-07-18T18:08:42Z",
+        "url": "https://github.com/pabulum/vibelock/commit/d465184bb908fed2a0a1dba5388a9564916488f2",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "80b5a668588db4a954894b8639b61da1c7f5a47d",
+        "shortSha": "80b5a66",
+        "message": "Split up App",
+        "title": "Split up App",
+        "date": "2026-07-18T17:34:59Z",
+        "url": "https://github.com/pabulum/vibelock/commit/80b5a668588db4a954894b8639b61da1c7f5a47d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "3a1186de1af4722c44a842c653e34628fa3fad33",
+        "shortSha": "3a1186d",
+        "message": "Command palette enhancements; timeline scrubber removed",
+        "title": "Command palette enhancements; timeline scrubber removed",
+        "date": "2026-07-18T03:51:11Z",
+        "url": "https://github.com/pabulum/vibelock/commit/3a1186de1af4722c44a842c653e34628fa3fad33",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "c07e383e64022ed32c2ed837a678f5a19190616e",
+        "shortSha": "c07e383",
+        "message": "Link preview fix",
+        "title": "Link preview fix",
+        "date": "2026-07-18T03:12:09Z",
+        "url": "https://github.com/pabulum/vibelock/commit/c07e383e64022ed32c2ed837a678f5a19190616e",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "6fa5a80c131eb98bd8e8f45218b45bc7f6330ae5",
+        "shortSha": "6fa5a80",
+        "message": "Port KV3 reader to typescript",
+        "title": "Port KV3 reader to typescript",
+        "date": "2026-07-17T21:37:53Z",
+        "url": "https://github.com/pabulum/vibelock/commit/6fa5a80c131eb98bd8e8f45218b45bc7f6330ae5",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "313169d37a33eef1f79fa52d84901a4a9a3fc925",
+        "shortSha": "313169d",
+        "message": "Share cards; per-hero link previews",
+        "title": "Share cards; per-hero link previews",
+        "date": "2026-07-17T21:19:08Z",
+        "url": "https://github.com/pabulum/vibelock/commit/313169d37a33eef1f79fa52d84901a4a9a3fc925",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "ba49b181bb511c015b116753fbe96a590ab0080d",
+        "shortSha": "ba49b18",
+        "message": "Split up buildGenerator; game clock scrubber",
+        "title": "Split up buildGenerator; game clock scrubber",
+        "date": "2026-07-17T18:08:42Z",
+        "url": "https://github.com/pabulum/vibelock/commit/ba49b181bb511c015b116753fbe96a590ab0080d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "2318474ecc368641b43048f9a6b6657e14748c3f",
+        "shortSha": "2318474",
+        "message": "Command palette; add structure to community build diff",
+        "title": "Command palette; add structure to community build diff",
+        "date": "2026-07-17T17:30:10Z",
+        "url": "https://github.com/pabulum/vibelock/commit/2318474ecc368641b43048f9a6b6657e14748c3f",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "fce829880fdf7f4d58bfccb79b130dc688eb4b57",
+        "shortSha": "fce8298",
+        "message": "Look and feel, preferring modern web standards",
+        "title": "Look and feel, preferring modern web standards",
+        "date": "2026-07-17T01:04:19Z",
+        "url": "https://github.com/pabulum/vibelock/commit/fce829880fdf7f4d58bfccb79b130dc688eb4b57",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "d749b75b0a30055e4bc1b578c650444bdb51e43e",
+        "shortSha": "d749b75",
+        "message": "Tanstack; Valibot",
+        "title": "Tanstack; Valibot",
+        "date": "2026-07-16T19:03:02Z",
+        "url": "https://github.com/pabulum/vibelock/commit/d749b75b0a30055e4bc1b578c650444bdb51e43e",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "2897901021798602fae13a8febe44b38395b24fb",
+        "shortSha": "2897901",
+        "message": "Browser smoke tests; React Compiler",
+        "title": "Browser smoke tests; React Compiler",
+        "date": "2026-07-16T15:53:19Z",
+        "url": "https://github.com/pabulum/vibelock/commit/2897901021798602fae13a8febe44b38395b24fb",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "371bfb59daea41b1b986ef92301138e5a140ea70",
+        "shortSha": "371bfb5",
+        "message": "Improve UX of farm bars",
+        "title": "Improve UX of farm bars",
+        "date": "2026-07-16T14:53:29Z",
+        "url": "https://github.com/pabulum/vibelock/commit/371bfb59daea41b1b986ef92301138e5a140ea70",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "9b9315338cd5df0b3bc1a28ba5486e9265a17ca2",
+        "shortSha": "9b93153",
+        "message": "Economy panel; other UX changes",
+        "title": "Economy panel; other UX changes",
+        "date": "2026-07-16T14:50:01Z",
+        "url": "https://github.com/pabulum/vibelock/commit/9b9315338cd5df0b3bc1a28ba5486e9265a17ca2",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "67540151248a363a36a1916de94cfdf2bf7d4849",
+        "shortSha": "6754015",
+        "message": "Reorganize layout",
+        "title": "Reorganize layout",
+        "date": "2026-07-15T14:59:04Z",
+        "url": "https://github.com/pabulum/vibelock/commit/67540151248a363a36a1916de94cfdf2bf7d4849",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "64824878589cf6be9dc575babc06e5aa861b68cc",
+        "shortSha": "6482487",
+        "message": "Harvester to include economy; Matches modal; match stats with hero metadata",
+        "title": "Harvester to include economy; Matches modal; match stats with hero metadata",
+        "date": "2026-07-15T01:27:30Z",
+        "url": "https://github.com/pabulum/vibelock/commit/64824878589cf6be9dc575babc06e5aa861b68cc",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "758857222062d0113c3d295a54b95778623824cb",
+        "shortSha": "7588572",
+        "message": "Fix Lane phase to account for deadlock-api net worth at buy bug",
+        "title": "Fix Lane phase to account for deadlock-api net worth at buy bug",
+        "date": "2026-07-14T01:57:52Z",
+        "url": "https://github.com/pabulum/vibelock/commit/758857222062d0113c3d295a54b95778623824cb",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "be124f83f960d7a69bb361d2442ec50840d25ba3",
+        "shortSha": "be124f8",
+        "message": "Prevent duplicating core items in Overtime Buys",
+        "title": "Prevent duplicating core items in Overtime Buys",
+        "date": "2026-07-14T01:24:15Z",
+        "url": "https://github.com/pabulum/vibelock/commit/be124f83f960d7a69bb361d2442ec50840d25ba3",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "ef2163e10bf718697af9c03e0b4789295102a838",
+        "shortSha": "ef2163e",
+        "message": "Readme updates, methodology",
+        "title": "Readme updates, methodology",
+        "date": "2026-07-13T23:39:30Z",
+        "url": "https://github.com/pabulum/vibelock/commit/ef2163e10bf718697af9c03e0b4789295102a838",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "93ee2b6ec739e74a3394f2b69c8259da4865c437",
+        "shortSha": "93ee2b6",
+        "message": "Fix nightly job",
+        "title": "Fix nightly job",
+        "date": "2026-07-13T21:31:48Z",
+        "url": "https://github.com/pabulum/vibelock/commit/93ee2b6ec739e74a3394f2b69c8259da4865c437",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "c92b26a20353429d462fe0ab8fe5afe7c764b046",
+        "shortSha": "c92b26a",
+        "message": "Instant hero metadata swap + loading indicator",
+        "title": "Instant hero metadata swap + loading indicator",
+        "date": "2026-07-13T21:09:05Z",
+        "url": "https://github.com/pabulum/vibelock/commit/c92b26a20353429d462fe0ab8fe5afe7c764b046",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "70e28cf21142899e1a7b3f4c34c1ee3528f4015d",
+        "shortSha": "70e28cf",
+        "message": "Improve overtime suggestions",
+        "title": "Improve overtime suggestions",
+        "date": "2026-07-13T20:58:24Z",
+        "url": "https://github.com/pabulum/vibelock/commit/70e28cf21142899e1a7b3f4c34c1ee3528f4015d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "8222e61dbbe0d008d89532662d2e3464786ab3fd",
+        "shortSha": "8222e61",
+        "message": "Move harvested data to Releases for greater volume",
+        "title": "Move harvested data to Releases for greater volume",
+        "date": "2026-07-13T00:08:27Z",
+        "url": "https://github.com/pabulum/vibelock/commit/8222e61dbbe0d008d89532662d2e3464786ab3fd",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "7f5dffe32b7934af34dc53b8c0ea9152317355a0",
+        "shortSha": "7f5dffe",
+        "message": "Greater harvested data density; compute clowing power by residual",
+        "title": "Greater harvested data density; compute clowing power by residual",
+        "date": "2026-07-12T20:07:48Z",
+        "url": "https://github.com/pabulum/vibelock/commit/7f5dffe32b7934af34dc53b8c0ea9152317355a0",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "28abf0ab761d2ddf9ade3d94885e4ed8d0d5f64a",
+        "shortSha": "28abf0a",
+        "message": "Greater match volume; Lab section for generic match data stats; feed WPA into win-more/comeback tags where hero-specific data is lacking; closing power on hero selection; phase lead win%",
+        "title": "Greater match volume; Lab section for generic match data stats; feed WPA into win-more/comeback tags where hero-specific data is lacking; closing power on hero selection; phase lead win%",
+        "date": "2026-07-12T19:13:50Z",
+        "url": "https://github.com/pabulum/vibelock/commit/28abf0ab761d2ddf9ade3d94885e4ed8d0d5f64a",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "60a5c84c42903c47c5e2d7d9714350ca7be29790",
+        "shortSha": "60a5c84",
+        "message": "Fix for empty string",
+        "title": "Fix for empty string",
+        "date": "2026-07-11T18:04:50Z",
+        "url": "https://github.com/pabulum/vibelock/commit/60a5c84c42903c47c5e2d7d9714350ca7be29790",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "0d238b4af9c78e04ba5928f4c859fbed65cd796a",
+        "shortSha": "0d238b4",
+        "message": "Fetch match data for future use",
+        "title": "Fetch match data for future use",
+        "date": "2026-07-11T04:23:48Z",
+        "url": "https://github.com/pabulum/vibelock/commit/0d238b4af9c78e04ba5928f4c859fbed65cd796a",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "bbece6c689f9d0bf4a206dcb4e6264a51c68eceb",
+        "shortSha": "bbece6c",
+        "message": "Clearer tags",
+        "title": "Clearer tags",
+        "date": "2026-07-10T19:01:10Z",
+        "url": "https://github.com/pabulum/vibelock/commit/bbece6c689f9d0bf4a206dcb4e6264a51c68eceb",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "6b39db5fa14c8eddb189324485831a33a7ce7d0c",
+        "shortSha": "6b39db5",
+        "message": "Slightly improve upgrade logic; clarify comments",
+        "title": "Slightly improve upgrade logic; clarify comments",
+        "date": "2026-07-10T00:39:59Z",
+        "url": "https://github.com/pabulum/vibelock/commit/6b39db5fa14c8eddb189324485831a33a7ce7d0c",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "9a2a68c0011e4fda086661370cdee3bc86153361",
+        "shortSha": "9a2a68c",
+        "message": "Don't show situational components if their upgrade is in the core build",
+        "title": "Don't show situational components if their upgrade is in the core build",
+        "date": "2026-07-08T17:50:41Z",
+        "url": "https://github.com/pabulum/vibelock/commit/9a2a68c0011e4fda086661370cdee3bc86153361",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "ca2a0554faff14b61e7be0e4291420da30d50a59",
+        "shortSha": "ca2a055",
+        "message": "Added trending items to situational; loading overlay fixes",
+        "title": "Added trending items to situational; loading overlay fixes",
+        "date": "2026-07-08T01:11:39Z",
+        "url": "https://github.com/pabulum/vibelock/commit/ca2a0554faff14b61e7be0e4291420da30d50a59",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b5c6b9b8b3c0dfb43afae2e0db63bef3c836be94",
+        "shortSha": "b5c6b9b",
+        "message": "Run tests in CI; fuzzy counter matching; trending options for the patch; distinguish between competing vs bought-together items",
+        "title": "Run tests in CI; fuzzy counter matching; trending options for the patch; distinguish between competing vs bought-together items",
+        "date": "2026-07-06T21:15:25Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b5c6b9b8b3c0dfb43afae2e0db63bef3c836be94",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "172ce4172e8d00dcf22f7ea4ef778b6117937043",
+        "shortSha": "172ce41",
+        "message": "Split up App into multiple components",
+        "title": "Split up App into multiple components",
+        "date": "2026-07-06T14:23:34Z",
+        "url": "https://github.com/pabulum/vibelock/commit/172ce4172e8d00dcf22f7ea4ef778b6117937043",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "3e9e8c2038ba92d31c47ec314916817c918e278a",
+        "shortSha": "3e9e8c2",
+        "message": "Phase-centered counter buckets",
+        "title": "Phase-centered counter buckets",
+        "date": "2026-07-04T18:11:33Z",
+        "url": "https://github.com/pabulum/vibelock/commit/3e9e8c2038ba92d31c47ec314916817c918e278a",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "22a43a0d5a36a8eec60faa5173f2fed89e24d35c",
+        "shortSha": "22a43a0",
+        "message": "Add explanation for highly picked low/negative marginal winrate items",
+        "title": "Add explanation for highly picked low/negative marginal winrate items",
+        "date": "2026-07-03T18:25:22Z",
+        "url": "https://github.com/pabulum/vibelock/commit/22a43a0d5a36a8eec60faa5173f2fed89e24d35c",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "bd760c1078d65581d3e7ad29c99c06b5f9f3a159",
+        "shortSha": "bd760c1",
+        "message": "Narrower rank band; multi-enemy counters are now summed (after EB-shrink) rather than averaged",
+        "title": "Narrower rank band; multi-enemy counters are now summed (after EB-shrink) rather than averaged",
+        "date": "2026-07-03T15:56:08Z",
+        "url": "https://github.com/pabulum/vibelock/commit/bd760c1078d65581d3e7ad29c99c06b5f9f3a159",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "7a317fdf98f84371c768184a4027bfd9e7168b47",
+        "shortSha": "7a317fd",
+        "message": "Allow Steam /id/username vanity URLs (suggest match); default to most-played hero",
+        "title": "Allow Steam /id/username vanity URLs (suggest match); default to most-played hero",
+        "date": "2026-07-03T15:08:38Z",
+        "url": "https://github.com/pabulum/vibelock/commit/7a317fdf98f84371c768184a4027bfd9e7168b47",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "84c543ca8fefac63e22900f5e7c4ca95a834a24d",
+        "shortSha": "84c543c",
+        "message": "More options for Steam account input; set rank band based on account",
+        "title": "More options for Steam account input; set rank band based on account",
+        "date": "2026-07-02T21:23:50Z",
+        "url": "https://github.com/pabulum/vibelock/commit/84c543ca8fefac63e22900f5e7c4ca95a834a24d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b530cb7cb41d346bcdfa22d2af7751b43c76da26",
+        "shortSha": "b530cb7",
+        "message": "Drop 30% floor for items, prioritize highly picked items only if buyers edge non-buyers; add heroes worth taking a winrate tax to learn; graceful failure for server errors",
+        "title": "Drop 30% floor for items, prioritize highly picked items only if buyers edge non-buyers; add heroes worth taking a winrate tax to learn; graceful failure for server errors",
+        "date": "2026-07-02T21:00:15Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b530cb7cb41d346bcdfa22d2af7751b43c76da26",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "8375a8ef2ae603bf737fa03e63cb5ffdeabf2d15",
+        "shortSha": "8375a8e",
+        "message": "Bradley-Terry de-noise toggle for matchups: strength-adjusted residuals so Tough means counters, not meta\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "title": "Bradley-Terry de-noise toggle for matchups: strength-adjusted residuals so Tough means counters, not meta",
+        "date": "2026-07-02T18:36:44Z",
+        "url": "https://github.com/pabulum/vibelock/commit/8375a8ef2ae603bf737fa03e63cb5ffdeabf2d15",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "decf3c7aa3faa9b6e242dd6f4e7bb744e70fc233",
+        "shortSha": "decf3c7",
+        "message": "What-to-queue: your-heroes chips ranked by expected win rate (your record shrunk toward the hero's current ladder rate)\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "title": "What-to-queue: your-heroes chips ranked by expected win rate (your record shrunk toward the hero's current ladder rate)",
+        "date": "2026-07-02T18:30:33Z",
+        "url": "https://github.com/pabulum/vibelock/commit/decf3c7aa3faa9b6e242dd6f4e7bb744e70fc233",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "03845b2ccca57bce4571da8bd0eb1069b10cb4d5",
+        "shortSha": "03845b2",
+        "message": "Fundamentals card: your souls/min, deaths, CS vs the ladder's percentile grid\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "title": "Fundamentals card: your souls/min, deaths, CS vs the ladder's percentile grid",
+        "date": "2026-07-02T18:26:43Z",
+        "url": "https://github.com/pabulum/vibelock/commit/03845b2ccca57bce4571da8bd0eb1069b10cb4d5",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "1c8e972739ba091010380a2bfca6f879740384cc",
+        "shortSha": "1c8e972",
+        "message": "Patch movers strip: FDR-gated per-hero item movement across the patch boundary\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "title": "Patch movers strip: FDR-gated per-hero item movement across the patch boundary",
+        "date": "2026-07-02T18:20:54Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1c8e972739ba091010380a2bfca6f879740384cc",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "1b77a572efd9eca137756206f6a374a0fac52c01",
+        "shortSha": "1b77a57",
+        "message": "Backfill counters (base-learned discounts shared to enemy slices); Steam profile: top-heroes quick-pick, rank floor pre-select\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "title": "Backfill counters (base-learned discounts shared to enemy slices); Steam profile: top-heroes quick-pick, rank floor pre-select",
+        "date": "2026-07-02T18:16:33Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1b77a572efd9eca137756206f6a374a0fac52c01",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "e65f3f8f5273bc6aeb69df32f1ccc4bf3fc6e688",
+        "shortSha": "e65f3f8",
+        "message": "Toggle backfilling prior patch data",
+        "title": "Toggle backfilling prior patch data",
+        "date": "2026-07-01T23:54:31Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e65f3f8f5273bc6aeb69df32f1ccc4bf3fc6e688",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "6bfce98ebe57728695b707f6d980abbe8505c447",
+        "shortSha": "6bfce98",
+        "message": "Blend last 30 days to improve sample for very recent patches",
+        "title": "Blend last 30 days to improve sample for very recent patches",
+        "date": "2026-07-01T22:17:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/6bfce98ebe57728695b707f6d980abbe8505c447",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "c66a5a01eacc74a135487e96ce85d41a279f8018",
+        "shortSha": "c66a5a0",
+        "message": "Components are not buyable if their upgrades already exist in the build",
+        "title": "Components are not buyable if their upgrades already exist in the build",
+        "date": "2026-07-01T21:49:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/c66a5a01eacc74a135487e96ce85d41a279f8018",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "855ee8d8ac5e92616745506b822f312deef78ac0",
+        "shortSha": "855ee8d",
+        "message": "Fix weak vs comp flag; item annotations in export; imbue targets in export",
+        "title": "Fix weak vs comp flag; item annotations in export; imbue targets in export",
+        "date": "2026-07-01T21:32:44Z",
+        "url": "https://github.com/pabulum/vibelock/commit/855ee8d8ac5e92616745506b822f312deef78ac0",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "33c10420c21b808acc2bdc62feddedf56b7e7562",
+        "shortSha": "33c1042",
+        "message": "Change default Steam ID",
+        "title": "Change default Steam ID",
+        "date": "2026-06-30T21:56:17Z",
+        "url": "https://github.com/pabulum/vibelock/commit/33c10420c21b808acc2bdc62feddedf56b7e7562",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b97c9992df8aa2df3dfbec885cdf816f94cd5a36",
+        "shortSha": "b97c999",
+        "message": "Include skills in the build export",
+        "title": "Include skills in the build export",
+        "date": "2026-06-30T19:24:12Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b97c9992df8aa2df3dfbec885cdf816f94cd5a36",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "a8c5bc7f8b6fd1ee477dc4ec6fc87d7b46d99433",
+        "shortSha": "a8c5bc7",
+        "message": "Export build to game",
+        "title": "Export build to game",
+        "date": "2026-06-30T00:22:39Z",
+        "url": "https://github.com/pabulum/vibelock/commit/a8c5bc7f8b6fd1ee477dc4ec6fc87d7b46d99433",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "5b46d36d263ed4d8c39036881b21fbaeafca87aa",
+        "shortSha": "5b46d36",
+        "message": "Don't bother with losing situationals",
+        "title": "Don't bother with losing situationals",
+        "date": "2026-06-29T02:15:23Z",
+        "url": "https://github.com/pabulum/vibelock/commit/5b46d36d263ed4d8c39036881b21fbaeafca87aa",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "5b27defa4e87dd103d95ee6c85d1fa84f9dd0a42",
+        "shortSha": "5b27def",
+        "message": "Add skill build comparison to the community builds but deprioritize skill build overall",
+        "title": "Add skill build comparison to the community builds but deprioritize skill build overall",
+        "date": "2026-06-27T19:39:58Z",
+        "url": "https://github.com/pabulum/vibelock/commit/5b27defa4e87dd103d95ee6c85d1fa84f9dd0a42",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "d73779dbb20dca0a04484d10d756d9b0a5ed54e4",
+        "shortSha": "d73779d",
+        "message": "Typefaces",
+        "title": "Typefaces",
+        "date": "2026-06-26T23:36:04Z",
+        "url": "https://github.com/pabulum/vibelock/commit/d73779dbb20dca0a04484d10d756d9b0a5ed54e4",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "0982067c9cf716cafb7c0f5728961d431acbd172",
+        "shortSha": "0982067",
+        "message": "Improved legibility for Open Graph previews",
+        "title": "Improved legibility for Open Graph previews",
+        "date": "2026-06-26T22:59:25Z",
+        "url": "https://github.com/pabulum/vibelock/commit/0982067c9cf716cafb7c0f5728961d431acbd172",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "929eb83012c1130847e0e9ad700d565c8d99c00d",
+        "shortSha": "929eb83",
+        "message": "Favicon, link preview, tests in deploy, path parameters",
+        "title": "Favicon, link preview, tests in deploy, path parameters",
+        "date": "2026-06-26T22:52:24Z",
+        "url": "https://github.com/pabulum/vibelock/commit/929eb83012c1130847e0e9ad700d565c8d99c00d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "e470b53ff61edb787b74592f47070a56d2edb413",
+        "shortSha": "e470b53",
+        "message": "CSP, license, disclaimers, error messages, tests",
+        "title": "CSP, license, disclaimers, error messages, tests",
+        "date": "2026-06-26T20:02:49Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e470b53ff61edb787b74592f47070a56d2edb413",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "6acf37b41e1d9d34e54a3c70ac37d3740d52a264",
+        "shortSha": "6acf37b",
+        "message": "Ahead/behind recommendations",
+        "title": "Ahead/behind recommendations",
+        "date": "2026-06-26T18:50:51Z",
+        "url": "https://github.com/pabulum/vibelock/commit/6acf37b41e1d9d34e54a3c70ac37d3740d52a264",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "524e29c4880d71bc4cba3f31f90be8c772493d2c",
+        "shortSha": "524e29c",
+        "message": "Fix duplicates when counters are added",
+        "title": "Fix duplicates when counters are added",
+        "date": "2026-06-25T23:53:00Z",
+        "url": "https://github.com/pabulum/vibelock/commit/524e29c4880d71bc4cba3f31f90be8c772493d2c",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "7484c35a03ea35bfb8e52c81858ae075d14bff86",
+        "shortSha": "7484c35",
+        "message": "Make sure components are included in the item count if not already bought",
+        "title": "Make sure components are included in the item count if not already bought",
+        "date": "2026-06-25T20:05:49Z",
+        "url": "https://github.com/pabulum/vibelock/commit/7484c35a03ea35bfb8e52c81858ae075d14bff86",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "be11390c5b5cc06f65528edda33146dbe306b4b3",
+        "shortSha": "be11390",
+        "message": "Don't \"rush if ahead\" if the marginal winrate is worse. No more \"win more\" tags for losers. Mobile friendliness pass",
+        "title": "Don't \"rush if ahead\" if the marginal winrate is worse. No more \"win more\" tags for losers. Mobile friendliness pass",
+        "date": "2026-06-25T16:50:02Z",
+        "url": "https://github.com/pabulum/vibelock/commit/be11390c5b5cc06f65528edda33146dbe306b4b3",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "52ef532414301fc91b18d2e162a3e04d5bccab0d",
+        "shortSha": "52ef532",
+        "message": "Surface counter items more reliably",
+        "title": "Surface counter items more reliably",
+        "date": "2026-06-25T04:24:57Z",
+        "url": "https://github.com/pabulum/vibelock/commit/52ef532414301fc91b18d2e162a3e04d5bccab0d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "e893d4c76b21a1092b4e23ed75cfb9072afed0dc",
+        "shortSha": "e893d4c",
+        "message": "Ensure the same item isn't included in the core build multiple times",
+        "title": "Ensure the same item isn't included in the core build multiple times",
+        "date": "2026-06-25T03:13:34Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e893d4c76b21a1092b4e23ed75cfb9072afed0dc",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "24607745414d16624370fcb6afc9dbd985c3cff6",
+        "shortSha": "2460774",
+        "message": "Info modal updates",
+        "title": "Info modal updates",
+        "date": "2026-06-25T00:26:19Z",
+        "url": "https://github.com/pabulum/vibelock/commit/24607745414d16624370fcb6afc9dbd985c3cff6",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "ba0457ee941e272032649c1b290601bf4b5a6398",
+        "shortSha": "ba0457e",
+        "message": "Synergies",
+        "title": "Synergies",
+        "date": "2026-06-24T23:47:27Z",
+        "url": "https://github.com/pabulum/vibelock/commit/ba0457ee941e272032649c1b290601bf4b5a6398",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "25bd4d6e1643d1a99d91509d5d86f588bd77ef52",
+        "shortSha": "25bd4d6",
+        "message": "Multiple-comparisons/FDR; synergies",
+        "title": "Multiple-comparisons/FDR; synergies",
+        "date": "2026-06-24T21:18:30Z",
+        "url": "https://github.com/pabulum/vibelock/commit/25bd4d6e1643d1a99d91509d5d86f588bd77ef52",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b50821c32c2195d9162ae916e8eb758e2fbac62a",
+        "shortSha": "b50821c",
+        "message": "Two-proportion significance on fixed thresholds",
+        "title": "Two-proportion significance on fixed thresholds",
+        "date": "2026-06-24T20:13:10Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b50821c32c2195d9162ae916e8eb758e2fbac62a",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "1e6e5c810eeb9415a6dff95109cecd6a90ce1c4c",
+        "shortSha": "1e6e5c8",
+        "message": "Empirical-Bayes shrinkage; Lower-confidence-bound ranking",
+        "title": "Empirical-Bayes shrinkage; Lower-confidence-bound ranking",
+        "date": "2026-06-24T19:53:42Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1e6e5c810eeb9415a6dff95109cecd6a90ce1c4c",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "c7681e95258804cbd37b2b4a3be314969a8add53",
+        "shortSha": "c7681e9",
+        "message": "Improved itemization. Shift more towards higher winrate items over simply higher pick percentage",
+        "title": "Improved itemization. Shift more towards higher winrate items over simply higher pick percentage",
+        "date": "2026-06-24T18:42:22Z",
+        "url": "https://github.com/pabulum/vibelock/commit/c7681e95258804cbd37b2b4a3be314969a8add53",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "06d891fee3093c3d7914ed44107760cda4594f2f",
+        "shortSha": "06d891f",
+        "message": "Improved itemization & added late late phase",
+        "title": "Improved itemization & added late late phase",
+        "date": "2026-06-24T03:52:59Z",
+        "url": "https://github.com/pabulum/vibelock/commit/06d891fee3093c3d7914ed44107760cda4594f2f",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "889aceacf1ac6c6ad05f9b43c5aebb0b427a33d7",
+        "shortSha": "889acea",
+        "message": "Components shouldn't count towards multiple item paths, they should be consumed by the next one built",
+        "title": "Components shouldn't count towards multiple item paths, they should be consumed by the next one built",
+        "date": "2026-06-23T22:28:45Z",
+        "url": "https://github.com/pabulum/vibelock/commit/889aceacf1ac6c6ad05f9b43c5aebb0b427a33d7",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "ac0b40d57e80daace56fd6f69301c2804dad3890",
+        "shortSha": "ac0b40d",
+        "message": "Ensure discount is used throughout building the build",
+        "title": "Ensure discount is used throughout building the build",
+        "date": "2026-06-23T21:59:21Z",
+        "url": "https://github.com/pabulum/vibelock/commit/ac0b40d57e80daace56fd6f69301c2804dad3890",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "e701f3e22fea16f187dacab8c2382971afd42d2d",
+        "shortSha": "e701f3e",
+        "message": "Include the \"builds from\" discount when both items are in the build",
+        "title": "Include the \"builds from\" discount when both items are in the build",
+        "date": "2026-06-23T03:21:03Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e701f3e22fea16f187dacab8c2382971afd42d2d",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "7f43c28c9b3e1350cf491a4987d9a6b8b1436b20",
+        "shortSha": "7f43c28",
+        "message": "Try to exclude the worst of two competing items rather than including both",
+        "title": "Try to exclude the worst of two competing items rather than including both",
+        "date": "2026-06-23T00:54:05Z",
+        "url": "https://github.com/pabulum/vibelock/commit/7f43c28c9b3e1350cf491a4987d9a6b8b1436b20",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "2080f2d0c229c7d6e4f9ab996127c48141511e05",
+        "shortSha": "2080f2d",
+        "message": "Imbue targets on items",
+        "title": "Imbue targets on items",
+        "date": "2026-06-22T18:58:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/2080f2d0c229c7d6e4f9ab996127c48141511e05",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b6239d10caeffdf52c706d4690e1b84220f7bf24",
+        "shortSha": "b6239d1",
+        "message": "For heroes that need a lane healing item, suggest the best one (just affects Paradox)",
+        "title": "For heroes that need a lane healing item, suggest the best one (just affects Paradox)",
+        "date": "2026-06-22T17:54:04Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b6239d10caeffdf52c706d4690e1b84220f7bf24",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "7c92c13cf81521d8540090e1bb0a7166126d1880",
+        "shortSha": "7c92c13",
+        "message": "Explanation modal",
+        "title": "Explanation modal",
+        "date": "2026-06-22T13:47:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/7c92c13cf81521d8540090e1bb0a7166126d1880",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "2fa84d8c98b94a51065f35e21235d4b5e32c8d42",
+        "shortSha": "2fa84d8",
+        "message": "Re-rank items based on heroes (counters) selected",
+        "title": "Re-rank items based on heroes (counters) selected",
+        "date": "2026-06-22T02:33:16Z",
+        "url": "https://github.com/pabulum/vibelock/commit/2fa84d8c98b94a51065f35e21235d4b5e32c8d42",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "5c14349013871b5195c5a8367ffbda5a248716ae",
+        "shortSha": "5c14349",
+        "message": "Better use of space",
+        "title": "Better use of space",
+        "date": "2026-06-21T00:38:55Z",
+        "url": "https://github.com/pabulum/vibelock/commit/5c14349013871b5195c5a8367ffbda5a248716ae",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "d5938df278ebfec5d5e716cd2b64669ab22760cd",
+        "shortSha": "d5938df",
+        "message": "Better loading feedback",
+        "title": "Better loading feedback",
+        "date": "2026-06-19T06:41:42Z",
+        "url": "https://github.com/pabulum/vibelock/commit/d5938df278ebfec5d5e716cd2b64669ab22760cd",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "b5ec6bd7739e7a456e1d50c1ae9623e0907f4fd0",
+        "shortSha": "b5ec6bd",
+        "message": "Look and feel",
+        "title": "Look and feel",
+        "date": "2026-06-17T01:26:54Z",
+        "url": "https://github.com/pabulum/vibelock/commit/b5ec6bd7739e7a456e1d50c1ae9623e0907f4fd0",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "df9e77af644e13d17e203bd21e9fc9d5646785b1",
+        "shortSha": "df9e77a",
+        "message": "Community build comparison",
+        "title": "Community build comparison",
+        "date": "2026-06-17T00:11:52Z",
+        "url": "https://github.com/pabulum/vibelock/commit/df9e77af644e13d17e203bd21e9fc9d5646785b1",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "2494a06adb92213bcdcec5eb2c6d65bb2a855deb",
+        "shortSha": "2494a06",
+        "message": "Try to fit items proprotionally to stat share in order to prevent e.g. greens from being squeezed out from lower winrate",
+        "title": "Try to fit items proprotionally to stat share in order to prevent e.g. greens from being squeezed out from lower winrate",
+        "date": "2026-06-16T22:54:59Z",
+        "url": "https://github.com/pabulum/vibelock/commit/2494a06adb92213bcdcec5eb2c6d65bb2a855deb",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "1fb3b937ca75adb11554352be48898cebaecc587",
+        "shortSha": "1fb3b93",
+        "message": "Add GitHub Pages deploy via Actions\n\nAuto-build and publish dist/ to GitHub Pages on every push to main.\nSet vite base to /vibelock/ so assets resolve under the project subpath.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "title": "Add GitHub Pages deploy via Actions",
+        "date": "2026-06-16T00:27:03Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1fb3b937ca75adb11554352be48898cebaecc587",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "6ae595cf2019208313a71cd4dcb3653081abb751",
+        "shortSha": "6ae595c",
+        "message": "Item card on hover",
+        "title": "Item card on hover",
+        "date": "2026-06-15T20:55:43Z",
+        "url": "https://github.com/pabulum/vibelock/commit/6ae595cf2019208313a71cd4dcb3653081abb751",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "a88d705c162653223bfdc4ebb89b44ce0a2e68f2",
+        "shortSha": "a88d705",
+        "message": "Initial commit",
+        "title": "Initial commit",
+        "date": "2026-06-15T18:44:39Z",
+        "url": "https://github.com/pabulum/vibelock/commit/a88d705c162653223bfdc4ebb89b44ce0a2e68f2",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      }
+    ],
+    "commitCount": 92,
+    "lastCommit": "2026-07-25T04:42:34Z",
+    "firstCommit": "2026-06-15T18:44:39Z",
+    "recentCommitCount": 92,
+    "weeklyHistogram": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      10,
+      25,
+      19,
+      10,
+      24,
+      4
+    ]
+  }
+}

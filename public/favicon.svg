@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Fixed colors rather than currentColor: favicons render outside the page's
+       cascade, so a theme-reactive fill would just come out black in most browsers. -->
+  <rect width="64" height="64" rx="14" fill="#1f5f9e" />
+  <path
+    d="M20 16v32M20 32l16-16M20 32l17 16"
+    stroke="#ffffff"
+    stroke-width="6.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import Feed from '../components/Feed.astro'
+import ProjectCard from '../components/ProjectCard.astro'
+import { PINNED } from '../data/projects'
+import { SITE } from '../data/site'
+import { getActivity } from '../lib/github'
+import { buildFeed, rankProjects } from '../lib/feed'
+
+const activity = await getActivity([...SITE.repos])
+const posts = await getCollection('writing')
+
+// Ranked by most-recent push, so the list reorders itself as work moves around.
+const order = rankProjects(
+  PINNED.map((p) => p.repo),
+  activity,
+)
+const ranked = order
+  .map((repo) => PINNED.find((p) => p.repo === repo))
+  .filter((p): p is (typeof PINNED)[number] => Boolean(p))
+
+// Eight is enough to show cadence without the page becoming a commit log.
+const feed = buildFeed(posts, activity, 8)
+
+const totalCommits = Object.values(activity).reduce((n, r) => n + r.commitCount, 0)
+const lastPush = Object.values(activity)
+  .map((r) => r.lastCommit)
+  .filter((d): d is string => Boolean(d))
+  .sort()
+  .at(-1)
+---
+
+<Base>
+  <section class="intro">
+    <h1 class="intro__title">{SITE.name}</h1>
+    <p class="intro__lede">
+      Product engineer. I take vague problems to shipped things — the analysis, the
+      interface, and the deploy.
+    </p>
+
+    <div class="intro__body">
+      <p>
+        I'm a software engineer with a design background, currently leading projects
+        end to end at my day job. The part I'm good at is the whole arc: figuring out
+        what's actually being asked, deciding what it should do, building it, and
+        putting it in front of people. Fewer handoffs, less spec translation.
+      </p>
+      <p>
+        The projects below are mine, built in the open. Both are live, both are running
+        against real data, and both started from the same kind of question:
+        <strong>the obvious number is misleading — what's the right one?</strong> The
+        code, the commits, and the reasoning are all public, so you can check.
+      </p>
+    </div>
+
+    <nav class="intro__links" aria-label="Contact and profiles">
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      {SITE.profiles.map((p) => (
+        <a href={p.url} rel="me">{p.label} {p.handle}</a>
+      ))}
+    </nav>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2 class="section__title">Projects</h2>
+      <span class="section__aside">by most recent work</span>
+    </div>
+
+    <div class="projects">
+      {ranked.map((project) => (
+        <ProjectCard project={project} activity={activity[project.repo]} />
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2 class="section__title">Activity</h2>
+      <span class="section__aside">
+        {totalCommits} commits
+        {lastPush && ` · updated ${new Date(lastPush).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          timeZone: 'UTC',
+        })}`}
+      </span>
+    </div>
+
+    <Feed items={feed} />
+  </section>
+</Base>

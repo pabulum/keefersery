@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+const posts = (await getCollection('writing'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => +b.data.date - +a.data.date)
+---
+
+<Base
+  title="Writing"
+  description="Notes on the projects I build — mostly on measuring the thing you actually care about instead of the thing that's easy to count."
+>
+  <section class="intro">
+    <h1 class="intro__title">Writing</h1>
+    <p class="intro__lede">
+      Mostly notes from the projects — usually about measuring the thing you actually
+      care about instead of the thing that's easy to count.
+    </p>
+  </section>
+
+  <section class="section">
+    {
+      posts.length === 0 ? (
+        <p class="empty">No posts yet.</p>
+      ) : (
+        <ul class="feed">
+          {posts.map((post) => (
+            <li class="feed__item">
+              <time class="feed__date" datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  timeZone: 'UTC',
+                })}
+              </time>
+              <div>
+                <h2 class="feed__title">
+                  <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+                </h2>
+                <p class="feed__desc">{post.data.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</Base>
