@@ -36,7 +36,7 @@ export const PROJECTS: Project[] = [
       "Data-driven item builds for the game Deadlock, generated from live match data.",
     insight:
       "Most build sites rank items by win rate, but an item's win rate mostly measures *when* it gets bought — expensive items are bought by players already winning, so they look good regardless of what they do. On live data that raw win rate correlates at r ≈ 0.91 with the win probability that already held at the moment of purchase. Vibelock scores against a net-worth-standardized win rate instead, and fills each phase against a real soul budget rather than ranking items independently, because a build is a correlated set under a constraint — the top-N items scored separately don't compose into one.",
-    stack: ["React 19", "TypeScript", "TanStack Query", "Vite", "Valibot"],
+    stack: ["React", "TypeScript", "TanStack Query", "Vite", "Valibot"],
     pinned: true,
   },
   {

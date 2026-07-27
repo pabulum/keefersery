@@ -6,11 +6,21 @@ export const SITE = {
   url: "https://keefersery.com",
   role: "Product engineer",
 
-  tagline:
-    "Product engineer. I take vague problems to shipped things — the analysis, the interface, and the deploy.",
+  tagline: "Product engineer",
 
   /** Routed through Cloudflare Email Routing. Keep catch-all off there. */
   email: "me@keefersery.com",
+
+  /**
+   * Named in the intro and emitted as schema.org `worksFor`, which is the strongest
+   * entity-disambiguation signal available for an uncommon personal name. This is a
+   * personal site, not an employer channel — the footer disclaimer says so.
+   */
+  employer: {
+    name: "Bank of America",
+    url: "https://www.bankofamerica.com",
+    title: "Software Engineer III",
+  },
 
   /** Rendered with rel="me". Each profile must link back here for the verification to hold. */
   profiles: [

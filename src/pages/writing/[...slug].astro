@@ -1,27 +1,28 @@
 ---
-import { getCollection, render } from 'astro:content'
-import type { GetStaticPaths } from 'astro'
-import Base from '../../layouts/Base.astro'
+import { getCollection, render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import Base from "../../layouts/Base.astro";
+import Link from "../../components/Link.astro";
 
 export const getStaticPaths = (async () => {
   // Drafts get no route at all. Without this filter they'd still build to a real URL —
   // unlinked, but live and in the sitemap. Preview drafts with `astro dev` instead.
-  const posts = (await getCollection('writing')).filter((p) => !p.data.draft)
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
-}) satisfies GetStaticPaths
+  const posts = (await getCollection("writing")).filter((p) => !p.data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
 
-const { post } = Astro.props
-const { Content, remarkPluginFrontmatter } = await render(post)
+const { post } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(post);
 
-const readingTime: string | undefined = remarkPluginFrontmatter?.readingTime
+const readingTime: string | undefined = remarkPluginFrontmatter?.readingTime;
 
 const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  })
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 ---
 
 <Base
@@ -36,7 +37,7 @@ const fmt = (d: Date) =>
     <p class="post__meta">
       <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
       {readingTime && ` · ${readingTime}`}
-      {post.data.draft && ' · draft'}
+      {post.data.draft && " · draft"}
     </p>
 
     <div class="prose">
@@ -45,8 +46,14 @@ const fmt = (d: Date) =>
 
     {
       post.data.crosspost && (
-        <p class="post__meta" style="margin-top: var(--space-l); border: 0; padding: 0;">
-          Also posted at <a href={post.data.crosspost}>{new URL(post.data.crosspost).hostname}</a>
+        <p
+          class="post__meta"
+          style="margin-top: var(--space-l); border: 0; padding: 0;"
+        >
+          Also posted at{" "}
+          <Link href={post.data.crosspost}>
+            {new URL(post.data.crosspost).hostname}
+          </Link>
         </p>
       )
     }

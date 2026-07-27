@@ -1,32 +1,42 @@
 ---
-import { SITE } from '../data/site'
-import '../styles/global.css'
+import { getNav } from "../data/nav";
+import { SITE } from "../data/site";
+import Link from "../components/Link.astro";
+import "../styles/global.css";
 
 type Props = {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
   /** Set on article pages so the OG type and JSON-LD describe a post, not the site. */
-  article?: { published: Date }
-}
+  article?: { published: Date };
+};
 
-const { title, description = SITE.tagline, article } = Astro.props
+const { title, description = SITE.tagline, article } = Astro.props;
 
-const pageTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} — ${SITE.role}`
-const canonical = new URL(Astro.url.pathname, SITE.url).href
-const path = Astro.url.pathname
+const pageTitle = title
+  ? `${title} — ${SITE.name}`
+  : `${SITE.name} — ${SITE.role}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const path = Astro.url.pathname;
+const nav = await getNav();
 
 // Tells a search engine that these accounts are one person. This is the machine-readable
 // half of the verification story; the rel="me" links below are the social half.
 const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
+  "@context": "https://schema.org",
+  "@type": "Person",
   name: SITE.name,
   url: SITE.url,
   email: `mailto:${SITE.email}`,
   jobTitle: SITE.role,
   description: SITE.tagline,
+  worksFor: {
+    "@type": "Organization",
+    name: SITE.employer.name,
+    url: SITE.employer.url,
+  },
   sameAs: SITE.profiles.map((p) => p.url),
-}
+};
 ---
 
 <html lang="en">
@@ -37,23 +47,41 @@ const personSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — writing`} href="/rss.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} — writing`}
+      href="/rss.xml"
+    />
 
-    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:type" content={article ? "article" : "website"} />
     <meta property="og:title" content={title ?? SITE.name} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
     <meta name="twitter:card" content="summary_large_image" />
-    {article && <meta property="article:published_time" content={article.published.toISOString()} />}
+    {
+      article && (
+        <meta
+          property="article:published_time"
+          content={article.published.toISOString()}
+        />
+      )
+    }
 
-    {/* Half of the two-way identity proof — each profile should link back here. */}
+    {
+      /* Half of the two-way identity proof — each profile should link back here. */
+    }
     {SITE.profiles.map((p) => <link rel="me" href={p.url} />)}
 
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(personSchema)}
+    />
   </head>
 
   <body>
@@ -63,11 +91,16 @@ const personSchema = {
       <header class="site-header">
         <a class="site-header__name" href="/">{SITE.name}</a>
         <nav class="site-nav" aria-label="Primary">
-          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
-          <a href="/writing/" aria-current={path.startsWith('/writing') ? 'page' : undefined}>
-            Writing
-          </a>
-          <a href={`https://github.com/${SITE.profiles[0]?.handle.replace('@', '')}`}>GitHub</a>
+          {
+            nav.map((item) => (
+              <Link
+                href={item.href}
+                aria-current={item.current(path) ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            ))
+          }
         </nav>
       </header>
 
@@ -78,10 +111,21 @@ const personSchema = {
       <footer class="site-footer">
         <span>© {new Date().getFullYear()} {SITE.name}</span>
         <span>
-          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-          {SITE.profiles.map((p) => (
-            <> · <a href={p.url} rel="me">{p.label}</a></>
-          ))}
+          <Link href={`mailto:${SITE.email}`}>{SITE.email}</Link>
+          {
+            SITE.profiles.map((p) => (
+              <>
+                {" "}
+                ·{" "}
+                <Link href={p.url} rel="me">
+                  {p.label}
+                </Link>
+              </>
+            ))
+          }
+        </span>
+        <span class="site-footer__note">
+          Views here are my own and don't represent {SITE.employer.name}.
         </span>
       </footer>
     </div>

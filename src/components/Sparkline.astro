@@ -6,21 +6,21 @@
  */
 
 type Props = {
-  data: number[]
-  label: string
-}
+  data: number[];
+  label: string;
+};
 
-const { data, label } = Astro.props
+const { data, label } = Astro.props;
 
-const BAR = 3
-const GAP = 1.5
-const HEIGHT = 18
-const max = Math.max(1, ...data)
-const width = data.length * (BAR + GAP) - GAP
+const BAR = 3;
+const GAP = 1.5;
+const HEIGHT = 18;
+const max = Math.max(1, ...data);
+const width = data.length * (BAR + GAP) - GAP;
 
 // "Hot" = the trailing quarter, so recent work is visually distinct from history.
-const hotFrom = data.length - 13
-const total = data.reduce((a, b) => a + b, 0)
+const hotFrom = data.length - 13;
+const total = data.reduce((a, b) => a + b, 0);
 ---
 
 <svg
@@ -34,7 +34,8 @@ const total = data.reduce((a, b) => a + b, 0)
   {
     data.map((value, i) => {
       // Floor at 1px so a zero-week still reads as a tick rather than a gap.
-      const h = value === 0 ? 1 : Math.max(2, Math.round((value / max) * HEIGHT))
+      const h =
+        value === 0 ? 1 : Math.max(2, Math.round((value / max) * HEIGHT));
       return (
         <rect
           x={i * (BAR + GAP)}
@@ -42,10 +43,10 @@ const total = data.reduce((a, b) => a + b, 0)
           width={BAR}
           height={h}
           rx={1}
-          data-hot={i >= hotFrom && value > 0 ? 'true' : 'false'}
+          data-hot={i >= hotFrom && value > 0 ? "true" : "false"}
           opacity={value === 0 ? 0.35 : 1}
         />
-      )
+      );
     })
   }
 </svg>

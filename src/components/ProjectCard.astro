@@ -1,14 +1,17 @@
 ---
-import type { Project } from '../data/projects'
-import type { RepoActivity } from '../lib/github'
-import Sparkline from './Sparkline.astro'
+import type { Project } from "../data/projects";
+import type { RepoActivity } from "../lib/github";
+import Sparkline from "./Sparkline.astro";
+import Link from "./Link.astro";
 
 type Props = {
-  project: Project
-  activity?: RepoActivity
-}
+  project: Project;
+  activity?: RepoActivity;
+};
 
-const { project, activity } = Astro.props
+const { project, activity } = Astro.props;
+
+const repoUrl = `https://github.com/${project.repo}`;
 
 /**
  * The insight strings carry *emphasis* markers, but they're plain TS strings and never
@@ -16,34 +19,38 @@ const { project, activity } = Astro.props
  * the delimiter — odd-indexed segments are the emphasized ones.
  */
 const emphasized = (text: string) =>
-  text.split('*').map((segment, i) => ({ text: segment, em: i % 2 === 1 }))
+  text.split("*").map((segment, i) => ({ text: segment, em: i % 2 === 1 }));
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-US', {
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  })
+  new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 
 const relative = (iso: string) => {
-  const days = Math.floor((Date.now() - +new Date(iso)) / 86_400_000)
-  if (days <= 0) return 'today'
-  if (days === 1) return 'yesterday'
-  if (days < 30) return `${days}d ago`
-  const months = Math.floor(days / 30)
-  return months < 12 ? `${months}mo ago` : `${Math.floor(months / 12)}y ago`
-}
+  const days = Math.floor((Date.now() - +new Date(iso)) / 86_400_000);
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return months < 12 ? `${months}mo ago` : `${Math.floor(months / 12)}y ago`;
+};
 ---
 
 <article class="project">
   <div class="project__top">
-    <h3 class="project__name"><a href={project.liveUrl}>{project.name}</a></h3>
+    <h3 class="project__name">
+      <Link href={project.liveUrl}>{project.name}</Link>
+    </h3>
     {
       activity?.lastCommit && (
         <div class="meta">
           <Sparkline data={activity.weeklyHistogram} label={project.name} />
           <span>{activity.commitCount} commits</span>
-          <span class="meta__dot">last push {relative(activity.lastCommit)}</span>
+          <span class="meta__dot">
+            last push {relative(activity.lastCommit)}
+          </span>
         </div>
       )
     }
@@ -52,7 +59,11 @@ const relative = (iso: string) => {
   <p class="project__tagline">{project.tagline}</p>
 
   <p class="project__insight">
-    {emphasized(project.insight).map((part) => (part.em ? <em>{part.text}</em> : part.text))}
+    {
+      emphasized(project.insight).map((part) =>
+        part.em ? <em>{part.text}</em> : part.text,
+      )
+    }
   </p>
 
   <ul class="project__stack">
@@ -60,8 +71,8 @@ const relative = (iso: string) => {
   </ul>
 
   <div class="project__links">
-    <a href={project.liveUrl}>Open the app →</a>
-    <a href={`https://github.com/${project.repo}`}>Source</a>
+    <Link href={project.liveUrl}>Open the app →</Link>
+    <Link href={repoUrl}>Source</Link>
     {
       activity?.firstCommit && activity.lastCommit && (
         <span class="section__aside">

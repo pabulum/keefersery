@@ -1,24 +1,29 @@
 ---
-import type { FeedItem } from '../lib/feed'
+import type { FeedItem } from "../lib/feed";
+import Link from "./Link.astro";
 
 type Props = {
-  items: FeedItem[]
+  items: FeedItem[];
   /** Commits shown per day-bundle before collapsing to a "+N more" line. */
-  commitsPerItem?: number
-}
+  commitsPerItem?: number;
+};
 
-const { items, commitsPerItem = 4 } = Astro.props
+const { items, commitsPerItem = 4 } = Astro.props;
 
 const fmtDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+  d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 
 const fmtFull = (d: Date) =>
-  d.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  })
+  d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 ---
 
 {
@@ -28,16 +33,20 @@ const fmtFull = (d: Date) =>
     <ul class="feed">
       {items.map((item) => (
         <li class="feed__item">
-          <time class="feed__date" datetime={item.date.toISOString()} title={fmtFull(item.date)}>
+          <time
+            class="feed__date"
+            datetime={item.date.toISOString()}
+            title={fmtFull(item.date)}
+          >
             {fmtDate(item.date)}
           </time>
 
           <div>
-            {item.kind === 'post' ? (
+            {item.kind === "post" ? (
               <>
                 <h3 class="feed__title">
                   <span class="feed__label feed__label--post">Wrote</span>
-                  <a href={item.href}>{item.title}</a>
+                  <Link href={item.href}>{item.title}</Link>
                 </h3>
                 <p class="feed__desc">{item.description}</p>
               </>
@@ -45,18 +54,21 @@ const fmtFull = (d: Date) =>
               <>
                 <h3 class="feed__title">
                   <span class="feed__label">Shipped</span>
-                  <a href={`https://github.com/${item.repo}`}>{item.repoName}</a>
+                  <Link href={`https://github.com/${item.repo}`}>
+                    {item.repoName}
+                  </Link>
                   <span class="section__aside">
-                    {' '}
-                    {item.commits.length} commit{item.commits.length === 1 ? '' : 's'}
+                    {" "}
+                    {item.commits.length} commit
+                    {item.commits.length === 1 ? "" : "s"}
                   </span>
                 </h3>
                 <ul class="feed__commits">
                   {item.commits.slice(0, commitsPerItem).map((c) => (
                     <li>
-                      <a class="feed__sha" href={c.url}>
+                      <Link class="feed__sha" href={c.url}>
                         {c.shortSha}
-                      </a>
+                      </Link>
                       <span>{c.title}</span>
                     </li>
                   ))}

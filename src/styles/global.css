@@ -44,7 +44,10 @@
   --border-strong: #cfcfc9;
   --text: #17171a;
   --text-muted: #5f6169;
-  --text-faint: #8b8d95;
+  /* 4.55:1 against --bg-subtle, the least favourable surface it lands on. It reads as
+     faint but clears WCAG 1.4.3 AA, which the old #8b8d95 (3.01:1) did not — and this
+     token carries real content: section headings, dates, commit ids, the footer. */
+  --text-faint: #6d6f77;
   --accent: #1f5f9e;
   --accent-soft: #e8f0f8;
   --shadow:
@@ -60,7 +63,7 @@
     --border-strong: #383b42;
     --text: #eceef1;
     --text-muted: #9ba1ac;
-    --text-faint: #6b717c;
+    --text-faint: #7b818c; /* 4.53:1 on --bg-subtle; was #6b717c at 3.62:1 */
     --accent: #7fb4e6;
     --accent-soft: #182734;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -8px rgb(0 0 0 / 0.5);
@@ -150,6 +153,34 @@ hr {
 
 /* ---------- Layout ---------- */
 
+/* Text for assistive tech only. Taken out of the visual layer but left in the
+   accessibility tree — `display: none` and `visibility: hidden` would remove it from
+   both, which is the whole thing we're trying not to do. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Marks a link that opens a new tab, for everyone who isn't hearing the announcement
+   in .visually-hidden. Sized in em and painted in currentColor deliberately: a px-sized
+   icon in a fixed grey is the thing that vanishes the moment someone enlarges the text
+   or raises contrast. This one grows with the type and inherits whatever contrast the
+   link already has. Not conveyed by colour alone — it is a distinct shape. */
+.external-icon {
+  width: 0.85em;
+  height: 0.85em;
+  margin-inline-start: 0.25em;
+  vertical-align: -0.08em;
+  flex: none;
+}
+
 .shell {
   max-width: var(--page);
   margin-inline: auto;
@@ -221,6 +252,11 @@ hr {
 
 .site-footer a {
   color: var(--text-muted);
+}
+
+/* Owns a full row so the disclaimer never competes with the contact line. */
+.site-footer__note {
+  flex-basis: 100%;
 }
 
 main {

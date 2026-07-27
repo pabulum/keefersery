@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import { satteri } from "@astrojs/markdown-satteri";
 import { remarkReadingTime } from "./src/lib/reading-time.mjs";
+import { externalLinks } from "./src/lib/external-links.mjs";
+import { isExternal } from "./src/lib/links";
 
 export default defineConfig({
   site: "https://keefersery.com",
@@ -12,7 +14,10 @@ export default defineConfig({
   trailingSlash: "always",
   integrations: [sitemap()],
   markdown: {
-    processor: satteri({ mdastPlugins: [remarkReadingTime] }),
+    processor: satteri({
+      mdastPlugins: [remarkReadingTime],
+      hastPlugins: [externalLinks({ isExternal })],
+    }),
     shikiConfig: { theme: "github-dark-dimmed", wrap: true },
   },
 });
