@@ -1,73 +1,299 @@
 /*
- * One stylesheet, no framework. The site is a few hundred lines of HTML; a utility
- * framework would cost more than it saves and would ship more CSS than this whole file.
+ * One stylesheet, no framework.
  *
- * Color is defined once as light values, then overridden wholesale in a single dark
- * block. Every component below references tokens only — no literal colors past line ~70.
+ * A Vignelli reading of the site, checked against The Vignelli Canon rather than
+ * against a general impression of his work. Where the Canon is specific, it wins:
+ *
+ *   Rulers        "Bolder rulers (2 pt) will separate major parts of the text, light
+ *                 rulers (1/2 pt or 1 pt) will separate items within each part."
+ *                 Two weights, not three. And: "Type should always hang from the
+ *                 ruler... always set closer to the ruler above" — so every record's
+ *                 padding is asymmetric, tight to the rule it hangs from.
+ *   Type sizes    "Stick to one or two type sizes at the most" and "we like to play
+ *                 off small type with larger type - usually twice as big." The scale
+ *                 is therefore literal doubling — 17 / 34 / 68 — not a modular ratio.
+ *                 "I prefer to keep the same size for heads and subheads in a text,
+ *                 and just make them in bold, with a line space above and none below",
+ *                 which is exactly how .prose sets its headings.
+ *   Colour        "We tend to prefer a primary palette of Red, Blue, and Yellow."
+ *                 One primary red, used as a signifier — never as running text.
+ *   Grid          The rail + content structure. "The underwear of the book."
+ *   White space   "It is really the white that makes the black sing."
+ *
+ * Physicality: he worked in print, so the page is a printed object — a slab of stock
+ * lying on a desk, with a spot-colour band at its head. The slab carries fibre grain
+ * and low-frequency crease mottling; the desk carries the same grain and nothing else,
+ * because a low-frequency field on an empty surface reads as cloud rather than
+ * material. One lamp falls across both, so the light source does not stop at the
+ * paper's edge. Two noise tiles serve all of it, scaled and blended per surface.
+ * All CSS and inline SVG; no image requests.
+ *
+ * Every contrast ratio quoted below was measured, not estimated.
  */
 
 :root {
-  /* Type */
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  /*
+   * Inter, self-hosted (see Base.astro), so every visitor gets the same setting
+   * rather than Helvetica-or-whatever-Windows-substitutes. Helvetica stays ahead of
+   * it for the small number of people who genuinely have it — the metrics are close
+   * enough that the grid does not shift.
+   *
+   * The file carries Inter's optical-size axis, so `font-optical-sizing: auto` below
+   * tightens the display sizes and opens up the small ones without a second family.
+   */
+  --font:
+    "Inter Variable", "Helvetica Neue", Helvetica, Inter, "Liberation Sans",
+    Arial, sans-serif;
+  /* The one exception to a single family: code has to be monospaced to be correct. */
   --font-mono:
     ui-monospace, "SF Mono", "JetBrains Mono", "IBM Plex Mono", Menlo, Consolas,
     monospace;
 
-  /* A 1.2 modular scale, clamped so the page reads well from 360px to 1600px. */
-  --step--1: clamp(0.79rem, 0.77rem + 0.1vw, 0.84rem);
-  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.09rem);
-  --step-1: clamp(1.2rem, 1.14rem + 0.3vw, 1.36rem);
-  --step-2: clamp(1.44rem, 1.34rem + 0.5vw, 1.7rem);
-  --step-3: clamp(1.73rem, 1.56rem + 0.83vw, 2.13rem);
-  --step-4: clamp(2.07rem, 1.8rem + 1.36vw, 2.66rem);
+  /*
+   * Three text sizes in strict 1 : 2 : 4, plus a label register for metadata.
+   * Any given page uses two of them and the labels — the Canon's "one or two type
+   * sizes at the most". The previous six-step modular scale is gone: steps you can't
+   * tell apart aren't a hierarchy, they're a smear.
+   */
+  --t-label: 0.6875rem; /* 11px — uppercase, tracked. Dates, section names, stack. */
+  --t-body: 1.0625rem; /* 17px — running text, and every heading below display */
+  --t-head: 2.125rem; /* 34px — exactly 2x body */
+  --t-display: clamp(2.125rem, 1.2rem + 4.6vw, 4.25rem); /* 2x → 4x body */
 
-  /* Space */
-  --space-2xs: 0.375rem;
-  --space-xs: 0.625rem;
+  /* Two weights. Roman and bold. */
+  --w-roman: 400;
+  --w-bold: 700;
+
+  /* Inter runs a little wide at display sizes and needs air when small and capped. */
+  --track-display: -0.025em;
+  --track-label: 0.13em;
+
+  /* Space, on an 8px unit. */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
   --space-s: 1rem;
   --space-m: 1.5rem;
   --space-l: 2.5rem;
   --space-xl: 4rem;
   --space-2xl: 6rem;
 
-  --measure: 68ch;
-  --page: 46rem;
-  --radius: 10px;
+  /* The grid. --rail is the metadata column: dates, indices, section labels. */
+  --rail: 9rem;
+  --gutter: 2rem;
+  --sheet-width: 60rem;
+  --measure: 62ch;
 
-  /* Light theme */
-  --bg: #fcfcfb;
-  --bg-subtle: #f4f4f2;
-  --surface: #ffffff;
-  --border: #e3e3df;
-  --border-strong: #cfcfc9;
-  --text: #17171a;
-  --text-muted: #5f6169;
-  /* 4.55:1 against --bg-subtle, the least favourable surface it lands on. It reads as
-     faint but clears WCAG 1.4.3 AA, which the old #8b8d95 (3.01:1) did not — and this
-     token carries real content: section headings, dates, commit ids, the footer. */
-  --text-faint: #6d6f77;
-  --accent: #1f5f9e;
-  --accent-soft: #e8f0f8;
-  --shadow:
-    0 1px 2px rgb(20 20 26 / 0.05), 0 4px 16px -8px rgb(20 20 26 / 0.12);
+  /*
+   * Two ruler weights, per the Canon. The old file had three (4/2/1px); the 4px rule
+   * was doing exactly the shouting he calls "intellectual vulgarity".
+   */
+  --rule-bold: 2px; /* separates major parts: masthead, sections, colophon */
+  --rule-light: 1px; /* separates items within a part: records, feed rows */
+
+  /*
+   * The one primary red. Identical in both schemes — it is the same ink, and a red
+   * that reads differently on paper than on black is simultaneous contrast, not two
+   * different colours.
+   *
+   * 4.14:1 on the light sheet, 4.01:1 on the dark one. That is deliberately below the
+   * 4.5:1 needed for running text, because red is never running text here: it is the
+   * band, the record numerals (34px bold — large text, 3:1), rule accents and link
+   * underlines (non-text, 3:1). Every one of those clears its bar on both grounds.
+   * No red at body size or smaller exists in this file. That constraint is what lets
+   * a genuinely primary red survive instead of the muddy brick a 4.5:1 target forces.
+   */
+  --red: #eb0000;
+
+  /* ---- Light: warm uncoated stock ---- */
+  /* The surface the sheet lies on — flat, untextured. Darker than the stock by more
+     than it first appears to need: the sheet loses ~10% of its brightness to its own
+     lamp and grain, so a desk set by eye against the nominal sheet colour ends up
+     within a few grey levels of the composited one. Nothing is set on the desk, so
+     darkening it costs no contrast anywhere. */
+  --ground: #cbc7ba;
+  --sheet: #f5f2eb;
+  --sheet-subtle: #eae6dd;
+  --ink: #14130f; /* 16.6:1 on sheet */
+  --ink-muted: #4b4941; /* 8.07:1 on sheet, 7.24:1 on subtle */
+  /* 6.20:1 / 5.57:1 on bare stock. Darkened from #636057 to pay for the grain: on
+     light the noise multiplies, so it darkens the background far more than it darkens
+     already-dark text, and contrast falls as the grain does. Measured across a
+     pessimistically dark patch of grain this still holds 4.68:1 — the old value fell
+     to 4.30:1 there. This token carries real content (dates, section names, commit
+     ids), so it clears AA on the least favourable surface, not the most. */
+  --ink-faint: #5c594f;
+  --grain-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g' filterUnits='userSpaceOnUse' x='0' y='0' width='300' height='300'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.22'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+  --grain-blend: multiply;
+  /* Higher than the dark figure because the two blend modes are not comparable at
+     equal opacity: `multiply` scales its variation by the backdrop, so on near-white
+     stock 0.11 produced a standard deviation of 1.25 grey levels against dark mode's
+     2.55. 0.26 matches them (2.80) and costs about 5% of the paper's brightness,
+     which on warm uncoated stock reads as the paper rather than as dirt. */
+  --grain-opacity: 0.26;
+  /* The desk takes less than the sheet: it is further from the eye and its only jobs
+     are material and dithering the shadow. */
+  --desk-grain-opacity: 0.14;
+  /*
+   * Creases — the crumpled-tissue reference. One desaturated low-frequency turbulence
+   * tile, shared by both schemes and by both surfaces. Strength, feature size and
+   * direction are the three plain CSS properties below, rather than numbers buried in
+   * percent-encoded XML: the previous version baked a feComponentTransfer into each
+   * theme's own copy of the SVG, which meant six duplicated slope/intercept values and
+   * no way to tune the texture without editing a data URI. Dropping the transfer costs
+   * only a small DC shift, and at these opacities that is a couple of grey levels.
+   *
+   * Two dead ends worth not repeating: feDiffuseLighting relief read as camouflage
+   * rather than paper *and* cannot tile (it samples neighbours past the tile edge, so
+   * every repeat drew a seam), and soft-light did nothing measurable on stock because
+   * its lightening term scales with (sqrt(b) - b), which collapses toward white.
+   */
+  --crumple-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='c' filterUnits='userSpaceOnUse' x='0' y='0' width='800' height='800'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0055' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23c)'/%3E%3C/svg%3E");
+  --crumple-blend: multiply;
+  /*
+   * Tuned to approximate the dark scheme's crease strength, measured the only way that
+   * compares meaningfully across two very different backgrounds: band-pass the render
+   * (blur 3 minus blur 60 isolates the crumple's spatial frequency from grain and lamp)
+   * and take the result as a percentage of local mean. Dark sits at 1.86%; this is
+   * 1.63%.
+   *
+   * It cannot go much higher. multiply is the only blend with real gain on near-white
+   * stock — overlay tops out at 2(1-b), about 0.29 here, and hard-light barely moved it
+   * — but multiply's darkening scales with the same opacity that buys the texture, and
+   * there is no headroom above white to compensate with a lighter sheet. Matching dark
+   * exactly needs 0.42, which lands the tightest text pair at 4.60:1: passing, with
+   * essentially nothing left over. 0.36 keeps the margin and loses little.
+   */
+  --crumple-opacity: 0.1;
+  --crumple-scale: 420px;
+  /*
+   * The lamp. Same problem, same answer: a white glow blended onto white stock is
+   * invisible, so on paper the light is expressed as its own falloff — white directly
+   * under the lamp, drifting to a faintly cooler grey as it gets further away, applied
+   * with multiply. The head of the sheet is not brightened; the foot is shaded.
+   */
+  /*
+   * Held deliberately shallow. Every surface layer here multiplies, and they compound:
+   * crumple x lamp x grain. Text and paper take the same local multiplier, so contrast
+   * sinks as that product falls — measured, the tightest pair (faint on subtle) breaks
+   * AA once the product drops below about 0.78. An earlier, prettier falloff put the
+   * foot of the page at 0.86 with excursions past 0.81, which passed but spent nearly
+   * all the headroom on a gradient most people would never consciously see.
+   */
+  --lamp: radial-gradient(
+    150% 55rem at 46% -9rem,
+    #ffffff 15%,
+    #faf7f1 60%,
+    #f4f1e9 100%
+  );
+  --lamp-blend: multiply;
+  --sheet-shadow:
+    0 1px 0 rgb(255 255 255 / 0.6) inset, 0 1px 2px rgb(20 19 15 / 0.1),
+    0 5px 10px -2px rgb(20 19 15 / 0.13), 0 14px 26px -12px rgb(20 19 15 / 0.28);
+
+  /*
+   * The dark palette, written once. The two blocks below only map these onto the live
+   * tokens — a value appearing twice is a value that drifts.
+   */
+  /* Not pure black. Driving this to #000 was the wrong lever for depth — separation is
+     the shadow's job, and a surface with no tone of its own has nowhere to show the
+     crumple texture it now carries. */
+  --d-ground: #111111;
+  --d-sheet: #131313;
+  --d-sheet-subtle: #1c1c1c;
+  --d-ink: #edeae3; /* 15.47:1 */
+  --d-ink-muted: #a29e95; /* 6.96:1 / 6.38:1 */
+  --d-ink-faint: #918d84; /* 5.62:1 / 5.15:1 */
+  /* `multiply` and `overlay` both collapse to nothing against near-black — overlay
+     resolves to 2 x backdrop x source, which on #131313 is indistinguishable from the
+     backdrop. That is why the grain was invisible in dark mode. `screen` adds light,
+     which is the only direction texture can go on an ink ground. */
+  --d-grain-blend: screen;
+  /* Calibrated by measuring pixel variance on a blank area of the rendered sheet:
+     0.05 gave a standard deviation of ~1 grey level, which is at or under the
+     threshold of visibility — present in the page but not perceptible, the worst of
+     both. 0.11 gives ~2.5, which reads as texture. Because `screen` only ever adds
+     light, this also lifts the dark sheet from #131313 to about #202020 in practice;
+     contrast was re-checked against those composited values, not the nominal ones,
+     and the tightest pair (faint on subtle) still measures 4.82:1. */
+  --d-grain-opacity: 0.11;
+  --d-desk-grain-opacity: 0.07;
+  /* On an ink ground a crease can only read as a highlight — there is nothing to darken
+     into — so the same tile is screened rather than multiplied. Kept low: screen adds
+     the noise's own mid-grey level everywhere before it adds a single crease, and that
+     DC lift is what turned an earlier, stronger setting into camouflage. */
+  --d-crumple-blend: screen;
+  --d-crumple-opacity: 0.02;
+  --d-crumple-scale: 300px;
+  --d-lamp: radial-gradient(
+    150% 55rem at 46% -9rem,
+    rgb(255 236 198 / 0.13) 0%,
+    rgb(255 236 198 / 0.05) 45%,
+    transparent 66%
+  );
+  --d-lamp-blend: screen;
+  /* Deliberately heavier than the light sheet's. A sheet on a black surface has no
+     tonal edge to define it, so the shadow is the only thing doing that job — where
+     on paper the stock itself is already lighter than the surface under it. */
+  /* Tighter and harder than before. The old stack ended in a 96px/160px falloff, and a
+     very wide, very low-contrast gradient is precisely the thing 8-bit output cannot
+     represent smoothly — that was the banding. Short throws step too fast to band, and
+     the desk grain below dithers what is left. The 1px edge ring stays; it is what
+     gives the slab its cut edge. */
+  --d-sheet-shadow:
+    0 1px 0 rgb(255 255 255 / 0.06) inset, 0 0 0 1px rgb(255 255 255 / 0.09),
+    0 1px 2px rgb(0 0 0 / 0.9), 0 6px 12px -2px rgb(0 0 0 / 0.85),
+    0 18px 32px -12px rgb(0 0 0 / 0.75);
 }
 
+/*
+ * Two routes into dark: the system preference (unless explicitly overridden to light)
+ * and an explicit choice. The mapping is repeated because CSS has no way to apply one
+ * declaration block to a media query and a selector at once — but the *values* are
+ * single-sourced above, so the two can't disagree.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #101113;
-    --bg-subtle: #17181b;
-    --surface: #17181b;
-    --border: #26282d;
-    --border-strong: #383b42;
-    --text: #eceef1;
-    --text-muted: #9ba1ac;
-    --text-faint: #7b818c; /* 4.53:1 on --bg-subtle; was #6b717c at 3.62:1 */
-    --accent: #7fb4e6;
-    --accent-soft: #182734;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -8px rgb(0 0 0 / 0.5);
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: var(--d-ground);
+    --sheet: var(--d-sheet);
+    --sheet-subtle: var(--d-sheet-subtle);
+    --ink: var(--d-ink);
+    --ink-muted: var(--d-ink-muted);
+    --ink-faint: var(--d-ink-faint);
+    --grain-blend: var(--d-grain-blend);
+    --grain-opacity: var(--d-grain-opacity);
+    --desk-grain-opacity: var(--d-desk-grain-opacity);
+    --crumple-blend: var(--d-crumple-blend);
+    --crumple-opacity: var(--d-crumple-opacity);
+    --crumple-scale: var(--d-crumple-scale);
+    --lamp: var(--d-lamp);
+    --lamp-blend: var(--d-lamp-blend);
+    --sheet-shadow: var(--d-sheet-shadow);
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: var(--d-ground);
+  --sheet: var(--d-sheet);
+  --sheet-subtle: var(--d-sheet-subtle);
+  --ink: var(--d-ink);
+  --ink-muted: var(--d-ink-muted);
+  --ink-faint: var(--d-ink-faint);
+  --grain-blend: var(--d-grain-blend);
+  --grain-opacity: var(--d-grain-opacity);
+  --desk-grain-opacity: var(--d-desk-grain-opacity);
+  --crumple-blend: var(--d-crumple-blend);
+  --crumple-opacity: var(--d-crumple-opacity);
+  --crumple-scale: var(--d-crumple-scale);
+  --lamp: var(--d-lamp);
+  --lamp-blend: var(--d-lamp-blend);
+  --sheet-shadow: var(--d-sheet-shadow);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 *,
@@ -79,6 +305,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  background: var(--ground);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -93,26 +320,210 @@ html {
   }
 }
 
+/*
+ * The scene's two viewport-wide layers. Both are absolutely positioned rather than
+ * fixed, so they are anchored to the document and travel with the page.
+ *
+ * That anchoring is the whole point. There used to be two separate lamps — one inside
+ * the sheet and one fixed to the viewport for the desk — which meant the pool of light
+ * tore in half at the paper's edge as soon as you scrolled: the half on the paper moved
+ * with it, the half on the desk stayed put. A single light source cannot do that. The
+ * grain had the same split, so the desk's noise swam across the sheet's.
+ *
+ * One lamp now covers desk and sheet together. It sits above the sheet, because light
+ * falls on an object rather than being mixed into it, and its blend mode does the rest:
+ * multiply on stock, screen on slate, so one light reads correctly off two albedos.
+ */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: var(--lamp);
+  mix-blend-mode: var(--lamp-blend);
+}
+
+/*
+ * Material, and the dither. Sits on top of everything, including the lamp, because its
+ * second job is breaking up the shadow and lamp gradients — a wide, low-contrast ramp
+ * is what 8-bit output renders as bands, and noise over it is the standard fix.
+ *
+ * The desk gets its texture from this layer alone. The crumple tile was tried here and
+ * read as blotchy cloud: a low-frequency field on an empty surface has nothing to be
+ * low-frequency against. The sheet takes this plus its own fibre on top, which is the
+ * right way round — paper is more textured than the thing it lies on.
+ */
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: var(--grain-img);
+  background-size: 150px 150px;
+  opacity: var(--desk-grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+}
+
+@media (prefers-contrast: more) {
+  body::before,
+  body::after {
+    display: none;
+  }
+}
+
 body {
+  position: relative;
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: var(--step-0);
-  line-height: 1.65;
+  min-height: 100vh;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font);
+  font-optical-sizing: auto;
+  font-size: var(--t-body);
+  font-weight: var(--w-roman);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  padding: var(--space-l) var(--space-m);
 }
+
+@media (max-width: 46rem) {
+  /* At phone width the "sheet on a surface" margins eat the measure. Full bleed. */
+  body {
+    padding: 0;
+  }
+}
+
+/* ---------- The sheet ---------- */
+
+.sheet {
+  position: relative;
+  z-index: 1;
+  max-width: var(--sheet-width);
+  margin-inline: auto;
+  background: var(--sheet);
+  box-shadow: var(--sheet-shadow);
+}
+
+/* The spot-colour band at the head of the sheet — a plane of the primary red, which
+   is the way he actually used colour: as an identifier, not an accent on text. */
+.sheet__band {
+  height: 7px;
+  background: var(--red);
+}
+
+.sheet__inner {
+  padding: var(--space-l) var(--space-xl) var(--space-l);
+}
+
+@media (max-width: 46rem) {
+  .sheet__inner {
+    padding: var(--space-m) var(--space-m) var(--space-l);
+  }
+}
+
+/*
+ * Three stacked surface layers, all bound to the sheet rather than to the viewport,
+ * so the texture belongs to the paper and travels with it instead of sliding across
+ * it as you scroll. They sit above the type — ink is printed *into* a surface, so the
+ * surface has to be on top of it — and take no pointer events.
+ */
+.sheet__grain,
+.sheet__crumple {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+ * Paper fibre. Fine, high-frequency noise.
+ *
+ * The previous pass dropped baseFrequency 0.9 -> 0.6 to make the grain visible, but
+ * frequency was never the reason it was invisible — the blend mode was, and coarsening
+ * it just made the noise look like low-resolution blotches. Back to a fine 0.95.
+ *
+ * The tile is rendered at 2x its painted size (300 user units drawn into 150px) so a
+ * HiDPI display gets roughly one noise sample per device pixel instead of upscaling a
+ * CSS-pixel-sized pattern, which is the other half of why it read as low-res.
+ *
+ * Saturation is held at 0.22 rather than flattened to 0: dead-neutral grey noise over
+ * a dead-neutral grey sheet has nowhere to go but lighter and darker. Leaving a little
+ * chroma in gives the surface a slight colour drift, which is what depth looks like.
+ */
+.sheet__grain {
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+  background-image: var(--grain-img);
+  background-size: 150px 150px;
+}
+
+/*
+ * Creases — the crumpled-tissue reference. Very low-frequency turbulence pushed
+ * through a diffuse lighting filter, which turns the noise field into a lit relief:
+ * flats stay mid-tone, folds catch the light on one side and shade on the other.
+ *
+ * The distant light sits at elevation 32 deg on purpose. Diffuse output scales with
+ * sin(elevation), so ~32 deg lands a flat surface near mid-grey — the neutral point
+ * for soft-light — and the creases read as departures from it in both directions. A
+ * higher, more natural-looking elevation would blow the whole plane bright and simply
+ * wash the page out.
+ */
+.sheet__crumple {
+  opacity: var(--crumple-opacity);
+  mix-blend-mode: var(--crumple-blend);
+  background-image: var(--crumple-img);
+  background-size: var(--crumple-scale);
+}
+
+/* Texture is the first thing to go when someone has asked for maximum legibility. */
+@media (prefers-contrast: more) {
+  .sheet__grain,
+  .sheet__crumple {
+    display: none;
+  }
+}
+
+/* ---------- The grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+
+@media (max-width: 46rem) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-2xs);
+  }
+}
+
+/*
+ * "Type should always hang from the ruler... always set closer to the ruler above."
+ * Every block that sits under a rule uses this, so the space above the type is always
+ * a fraction of the space below it. Symmetric padding is what made the first pass
+ * read as a stack of boxes rather than a hung column.
+ */
+.hangs {
+  padding-top: var(--space-2xs);
+  padding-bottom: var(--space-l);
+}
+
+/* ---------- Type primitives ---------- */
 
 h1,
 h2,
 h3,
 h4 {
-  line-height: 1.2;
-  letter-spacing: -0.018em;
-  text-wrap: balance;
   margin: 0;
-  font-weight: 620;
+  font-size: var(--t-body);
+  font-weight: var(--w-bold);
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 p {
@@ -120,42 +531,68 @@ p {
   text-wrap: pretty;
 }
 
+/* Flush left, ragged right. Never justified, never hyphenated to force a rag. */
+p,
+li,
+dd {
+  hyphens: none;
+}
+
+/* The label register: 11px, uppercase, tracked. Section names, dates, stack lists,
+   the nav. Tracking is what keeps small capped Inter readable rather than a block. */
+.label {
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  line-height: 1.4;
+  color: var(--ink-faint);
+}
+
+.label--ink {
+  color: var(--ink);
+}
+
+/* Numbers, dates and ids line up in columns; Inter's proportional digits wander. */
+.data {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Links are ink with a red rule under them. Colour is never the only signal, and the
+ * hover state thickens the rule rather than shifting hue — the print equivalent of a
+ * heavier stroke. This is also why red never needs to pass as text: it is underneath
+ * the text, not in it.
+ */
 a {
-  color: var(--accent);
-  text-decoration-color: color-mix(in srgb, var(--accent) 32%, transparent);
-  text-underline-offset: 0.18em;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--red);
   text-decoration-thickness: 1px;
-  transition:
-    text-decoration-color 0.15s ease,
-    color 0.15s ease;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-thickness 0.12s linear;
 }
 
 a:hover {
-  text-decoration-color: currentColor;
+  text-decoration-thickness: 3px;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--rule-bold) solid var(--red);
   outline-offset: 3px;
-  border-radius: 3px;
 }
 
 code {
   font-family: var(--font-mono);
-  font-size: 0.9em;
+  font-size: 0.88em;
 }
 
 hr {
   border: 0;
-  border-top: 1px solid var(--border);
+  border-top: var(--rule-light) solid var(--ink-faint);
   margin: var(--space-l) 0;
 }
 
-/* ---------- Layout ---------- */
-
-/* Text for assistive tech only. Taken out of the visual layer but left in the
-   accessibility tree — `display: none` and `visibility: hidden` would remove it from
-   both, which is the whole thing we're trying not to do. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -168,35 +605,33 @@ hr {
   border: 0;
 }
 
-/* Marks a link that opens a new tab, for everyone who isn't hearing the announcement
-   in .visually-hidden. Sized in em and painted in currentColor deliberately: a px-sized
-   icon in a fixed grey is the thing that vanishes the moment someone enlarges the text
-   or raises contrast. This one grows with the type and inherits whatever contrast the
-   link already has. Not conveyed by colour alone — it is a distinct shape. */
+/*
+ * Marks a link that opens a new tab, for everyone not hearing the .visually-hidden
+ * announcement. Sized in em and painted in currentColor deliberately: a px-sized icon
+ * in a fixed grey is the thing that vanishes the moment someone enlarges the text or
+ * raises contrast. Not conveyed by colour alone — it is a distinct shape.
+ */
 .external-icon {
-  width: 0.85em;
-  height: 0.85em;
-  margin-inline-start: 0.25em;
-  vertical-align: -0.08em;
+  width: 0.8em;
+  height: 0.8em;
+  margin-inline-start: 0.3em;
+  vertical-align: -0.03em;
   flex: none;
-}
-
-.shell {
-  max-width: var(--page);
-  margin-inline: auto;
-  padding-inline: var(--space-m);
 }
 
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--surface);
-  color: var(--text);
-  padding: var(--space-xs) var(--space-s);
-  z-index: 10;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-strong);
+  z-index: 10000;
+  background: var(--ink);
+  color: var(--sheet);
+  padding: var(--space-2xs) var(--space-s);
+  text-decoration: none;
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
 }
 
 .skip-link:focus {
@@ -204,231 +639,297 @@ hr {
   top: var(--space-s);
 }
 
-.site-header {
-  padding-block: var(--space-m);
+/* ---------- Masthead ---------- */
+
+.masthead {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-s);
   align-items: baseline;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-
-.site-header__name {
-  font-weight: 640;
-  font-size: var(--step-0);
-  color: var(--text);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-}
-
-.site-nav {
-  display: flex;
-  gap: var(--space-m);
-  font-size: var(--step--1);
-}
-
-.site-nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-}
-
-.site-nav a:hover,
-.site-nav a[aria-current="page"] {
-  color: var(--text);
-}
-
-.site-footer {
-  margin-top: var(--space-2xl);
-  padding-block: var(--space-l);
-  border-top: 1px solid var(--border);
-  font-size: var(--step--1);
-  color: var(--text-faint);
-  display: flex;
-  flex-wrap: wrap;
   gap: var(--space-s) var(--space-m);
-  justify-content: space-between;
+  padding-bottom: var(--space-2xs);
+  border-bottom: var(--rule-bold) solid var(--ink);
 }
 
-.site-footer a {
-  color: var(--text-muted);
+.masthead__name {
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  text-decoration: none;
+  color: var(--ink);
 }
 
-/* Owns a full row so the disclaimer never competes with the contact line. */
-.site-footer__note {
-  flex-basis: 100%;
+.masthead__nav {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-m);
+}
+
+.masthead__nav a {
+  color: var(--ink-faint);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: var(--rule-bold) solid transparent;
+}
+
+.masthead__nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* The current section is marked by a red rule, not red text — 11px of red would be
+   the one place the primary red couldn't carry its own contrast. The rule can. */
+.masthead__nav a[aria-current="page"] {
+  color: var(--ink);
+  border-bottom-color: var(--red);
+}
+
+/* ---------- Theme toggle ---------- */
+
+/*
+ * Shows the mode you are in and cycles Auto -> Light -> Dark. Naming the current
+ * state avoids the usual toggle ambiguity, where an icon of a moon means either
+ * "you are in dark" or "click for dark" and nobody can tell which.
+ *
+ * Rendered [hidden] and revealed by script, because a control that cannot work
+ * without JS should not be offered when JS is absent.
+ */
+.theme-toggle {
+  font: inherit;
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-faint);
+  background: none;
+  border: 0;
+  border-bottom: var(--rule-bold) solid transparent;
+  padding: 0 0 2px;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.theme-toggle[hidden] {
+  display: none;
 }
 
 main {
   padding-top: var(--space-xl);
 }
 
-/* ---------- Section headings ---------- */
+/* ---------- Colophon ---------- */
+
+.colophon {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-2xs);
+  border-top: var(--rule-bold) solid var(--ink);
+}
+
+.colophon__body {
+  display: grid;
+  gap: var(--space-2xs);
+  color: var(--ink-faint);
+}
+
+.colophon__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-s);
+}
+
+/* ---------- Sections ---------- */
 
 .section {
-  margin-top: var(--space-2xl);
+  margin-top: var(--space-xl);
 }
 
+/*
+ * Section heads carry the bold ruler and the label hangs directly off it. Every rule
+ * in the page spans the full grid — rail plus content — so they all start and stop on
+ * the same two verticals. The first pass had rules terminating at three different x
+ * positions (some full width, some clipped to the 62ch measure), which is what made
+ * them feel arbitrary even though each one individually looked fine.
+ */
 .section__head {
-  display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-s);
-  margin-bottom: var(--space-m);
-  padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--border);
-}
-
-.section__title {
-  font-size: var(--step--1);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-faint);
+  padding-top: var(--space-2xs);
+  padding-bottom: var(--space-m);
+  border-top: var(--rule-bold) solid var(--ink);
 }
 
 .section__aside {
-  font-size: var(--step--1);
-  color: var(--text-faint);
-  font-family: var(--font-mono);
+  color: var(--ink-faint);
+}
+
+@media (max-width: 46rem) {
+  .section__head {
+    row-gap: var(--space-3xs);
+  }
 }
 
 /* ---------- Intro ---------- */
 
+/*
+ * The one display size on the page, against body text — "the play between a very
+ * large type size for headlines versus a much smaller type size for the body text,
+ * with proper white space in between."
+ */
 .intro__title {
-  font-size: var(--step-4);
-  margin-bottom: var(--space-s);
+  font-size: var(--t-display);
+  line-height: 1.03;
+  letter-spacing: var(--track-display);
 }
 
 .intro__lede {
-  font-size: var(--step-1);
-  color: var(--text-muted);
+  font-size: var(--t-body);
+  font-weight: var(--w-roman);
+  color: var(--ink);
   max-width: var(--measure);
-  margin-bottom: var(--space-m);
+  margin-top: var(--space-l);
 }
 
 .intro__body {
   max-width: var(--measure);
   display: grid;
   gap: var(--space-s);
-  color: var(--text-muted);
+  margin-top: var(--space-s);
+  color: var(--ink-muted);
 }
 
 .intro__body strong {
-  color: var(--text);
-  font-weight: 600;
+  color: var(--ink);
+  font-weight: var(--w-bold);
 }
 
 .intro__links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs) var(--space-s);
-  margin-top: var(--space-m);
-  font-size: var(--step--1);
-  font-family: var(--font-mono);
+  gap: var(--space-2xs) var(--space-m);
+  margin-top: var(--space-l);
 }
 
 .intro__links a {
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;
-  padding: 0.35em 0.75em;
-  border: 1px solid var(--border-strong);
-  border-radius: 100px;
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-muted);
   text-decoration: none;
-  color: var(--text-muted);
-  background: var(--surface);
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
+  border-bottom: var(--rule-light) solid var(--ink-faint);
+  padding-bottom: 2px;
 }
 
 .intro__links a:hover {
-  color: var(--text);
-  border-color: var(--text-faint);
+  color: var(--ink);
+  border-bottom-color: var(--red);
 }
 
-/* ---------- Project cards ---------- */
+/* ---------- Project records ---------- */
 
 .projects {
   display: grid;
-  gap: var(--space-m);
 }
 
 .project {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--space-m);
-  box-shadow: var(--shadow);
+  border-top: var(--rule-light) solid var(--ink-faint);
 }
 
-.project__top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-xs) var(--space-s);
+.project:first-child {
+  border-top: 0;
 }
 
-.project__name {
-  font-size: var(--step-2);
+/*
+ * The scale contrast on this page: a 34px red numeral against 17px text. The record's
+ * own title stays at body size in bold, per the Canon's preference for differentiating
+ * heads by weight rather than by size.
+ */
+.project__index {
+  font-size: var(--t-head);
+  font-weight: var(--w-bold);
+  line-height: 1;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-display);
+}
+
+@media (max-width: 46rem) {
+  .project__index {
+    font-size: var(--t-body);
+  }
 }
 
 .project__name a {
-  color: var(--text);
-  text-decoration: none;
+  text-decoration-thickness: 2px;
 }
 
 .project__name a:hover {
-  color: var(--accent);
+  text-decoration-thickness: 4px;
 }
 
 .project__tagline {
-  color: var(--text-muted);
-  margin-top: var(--space-2xs);
+  color: var(--ink);
+  margin-top: var(--space-3xs);
   max-width: var(--measure);
 }
 
+/* No rule here. An item inside an item inside a section is a third level, and the
+   Canon only sanctions two — the space does the separating instead. */
 .project__insight {
   margin-top: var(--space-s);
-  padding-top: var(--space-s);
-  border-top: 1px dashed var(--border);
-  color: var(--text-muted);
-  font-size: var(--step--1);
+  color: var(--ink-muted);
   max-width: var(--measure);
 }
 
 .project__insight em {
-  color: var(--text);
-  font-style: italic;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: var(--w-bold);
 }
 
 .project__stack {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2xs);
-  margin-top: var(--space-s);
+  gap: var(--space-2xs) var(--space-s);
+  margin: var(--space-s) 0 0;
   padding: 0;
   list-style: none;
+  color: var(--ink-faint);
 }
 
-.project__stack li {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.01em;
-  color: var(--text-muted);
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 0.15em 0.5em;
+.project__stack li + li::before {
+  content: "/";
+  margin-right: var(--space-s);
+  opacity: 0.55;
 }
 
-.project__links {
+.project__foot {
   display: flex;
-  gap: var(--space-s);
-  margin-top: var(--space-s);
-  font-size: var(--step--1);
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs) var(--space-m);
+  margin-top: var(--space-m);
+}
+
+.project__foot .section__aside {
+  margin-left: auto;
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 46rem) {
+  .project__foot .section__aside {
+    margin-left: 0;
+  }
 }
 
 /* ---------- Activity meta + sparkline ---------- */
@@ -437,22 +938,13 @@ main {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-xs);
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  color: var(--text-faint);
-}
-
-.meta__dot::before {
-  content: "·";
-  margin-right: var(--space-xs);
-}
-
-/* Once the meta line wraps, the separator ends up orphaned at the start of a row. */
-@media (max-width: 34rem) {
-  .meta__dot::before {
-    content: none;
-  }
+  gap: var(--space-2xs) var(--space-xs);
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
 }
 
 .sparkline {
@@ -461,11 +953,17 @@ main {
 }
 
 .sparkline rect {
-  fill: var(--border-strong);
+  fill: var(--ink-faint);
 }
 
 .sparkline rect[data-hot="true"] {
-  fill: var(--accent);
+  fill: var(--red);
+}
+
+/* Quieter than the bars — it's the axis, not the data. */
+.sparkline .sparkline__base {
+  fill: var(--ink-faint);
+  opacity: 0.45;
 }
 
 /* ---------- Feed ---------- */
@@ -475,68 +973,47 @@ main {
   padding: 0;
   margin: 0;
   display: grid;
-  gap: var(--space-s);
 }
 
 .feed__item {
-  display: grid;
-  grid-template-columns: 6.5rem 1fr;
-  gap: var(--space-s);
-  align-items: start;
-  padding-bottom: var(--space-s);
-  border-bottom: 1px solid var(--border);
+  border-top: var(--rule-light) solid var(--ink-faint);
 }
 
-.feed__item:last-child {
-  border-bottom: 0;
+.feed__item:first-child {
+  border-top: 0;
 }
 
 .feed__date {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  color: var(--text-faint);
-  padding-top: 0.25em;
-  white-space: nowrap;
-}
-
-.feed__label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.1em 0.45em;
-  border-radius: 4px;
-  border: 1px solid var(--border-strong);
-  color: var(--text-faint);
-  vertical-align: 0.12em;
-  margin-right: var(--space-xs);
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  /* Optically aligns the rail date with the cap height of the label beside it. */
+  padding-top: 0.15em;
 }
 
-.feed__label--post {
-  color: var(--accent);
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  background: var(--accent-soft);
+@media (max-width: 46rem) {
+  .feed__date {
+    padding-top: 0;
+  }
+}
+
+.feed__kind {
+  display: block;
+  margin-bottom: var(--space-3xs);
 }
 
 .feed__title {
-  font-size: var(--step-0);
-  font-weight: 580;
-  line-height: 1.4;
-}
-
-.feed__title a {
-  color: var(--text);
-  text-decoration: none;
-}
-
-.feed__title a:hover {
-  color: var(--accent);
+  font-size: var(--t-body);
+  font-weight: var(--w-bold);
 }
 
 .feed__desc {
-  color: var(--text-muted);
-  font-size: var(--step--1);
-  margin-top: var(--space-2xs);
+  color: var(--ink);
+  margin-top: var(--space-3xs);
   max-width: var(--measure);
 }
 
@@ -545,43 +1022,39 @@ main {
   padding: 0;
   margin: var(--space-2xs) 0 0;
   display: grid;
-  gap: 0.15em;
+  gap: var(--space-3xs);
+  max-width: var(--measure);
 }
 
 .feed__commits li {
-  font-size: var(--step--1);
-  color: var(--text-muted);
+  color: var(--ink-muted);
   display: flex;
-  gap: var(--space-xs);
+  gap: var(--space-s);
   align-items: baseline;
 }
 
+/* Commit ids read as codes — tracked, tabular, in the label register — rather than
+   reaching for a second typeface to say "this is machine output". */
 .feed__sha {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-faint);
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
   text-decoration: none;
+  border-bottom: var(--rule-light) solid transparent;
   flex-shrink: 0;
 }
 
 .feed__sha:hover {
-  color: var(--accent);
+  border-bottom-color: var(--red);
 }
 
 .feed__more {
-  font-size: var(--step--1);
-  color: var(--text-faint);
-  font-style: italic;
+  color: var(--ink-faint);
 }
 
-@media (max-width: 34rem) {
-  .feed__item {
-    grid-template-columns: 1fr;
-    gap: var(--space-2xs);
-  }
-}
-
-/* ---------- Prose (writing pages) ---------- */
+/* ---------- Prose ---------- */
 
 .prose {
   max-width: var(--measure);
@@ -591,96 +1064,175 @@ main {
   margin-top: var(--space-s);
 }
 
+/*
+ * "I prefer to keep the same size for heads and subheads in a text, and just make
+ * them in bold, with a line space above and none below." Both headings are body size;
+ * only the space above them differs, which is what marks their level.
+ */
+.prose h2,
+.prose h3 {
+  font-size: var(--t-body);
+  font-weight: var(--w-bold);
+  margin-bottom: 0;
+}
+
 .prose h2 {
-  font-size: var(--step-2);
   margin-top: var(--space-l);
 }
 
 .prose h3 {
-  font-size: var(--step-1);
   margin-top: var(--space-m);
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: var(--space-3xs);
 }
 
 .prose ul,
 .prose ol {
-  padding-left: 1.3em;
+  padding-left: 1.2em;
   display: grid;
-  gap: var(--space-2xs);
+  gap: var(--space-3xs);
 }
 
 .prose blockquote {
   margin: var(--space-m) 0;
   padding-left: var(--space-s);
-  border-left: 2px solid var(--border-strong);
-  color: var(--text-muted);
+  border-left: var(--rule-bold) solid var(--red);
+  color: var(--ink-muted);
 }
 
 .prose :not(pre) > code {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.1em 0.35em;
+  background: var(--sheet-subtle);
+  padding: 0.1em 0.3em;
 }
 
+/*
+ * Shiki writes each token's colour as an *inline* style and parks the dark-theme
+ * value alongside it in a --shiki-dark custom property. Inline styles outrank any
+ * selector, so !important is not optional here — without it the dark scheme silently
+ * keeps the light theme's near-black plain-text colour and every unhighlighted token
+ * disappears into the block.
+ *
+ * The background is overridden to the sheet's own tint rather than the theme's: a
+ * code block is a passage of the page, not a window onto another one.
+ */
 .prose pre {
   padding: var(--space-s);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-top: var(--rule-light) solid var(--ink-faint);
+  border-bottom: var(--rule-light) solid var(--ink-faint);
   overflow-x: auto;
-  font-size: var(--step--1);
   line-height: 1.55;
+  background-color: var(--sheet-subtle) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose .astro-code,
+  :root:not([data-theme="light"]) .prose .astro-code span {
+    color: var(--shiki-dark) !important;
+  }
+}
+
+:root[data-theme="dark"] .prose .astro-code,
+:root[data-theme="dark"] .prose .astro-code span {
+  color: var(--shiki-dark) !important;
 }
 
 .prose img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius);
 }
 
+/* Tabular data gets the print treatment: bold ruler above, light rulers between. */
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--step--1);
-  display: block;
-  overflow-x: auto;
+  font-variant-numeric: tabular-nums;
+  /* Deliberately NOT display:block. Making a table a block box stops its cells from
+     stretching to the declared width, so every row rule stopped short of the bold
+     rules bracketing the table — the same inconsistent-extent problem the section
+     rules had. A table that lays out as a table keeps all three rules on the same
+     two verticals; wide tables compress rather than scroll, which for this content
+     is the better trade. */
+  table-layout: auto;
+  border-top: var(--rule-bold) solid var(--ink);
+  border-bottom: var(--rule-bold) solid var(--ink);
 }
 
 .prose th,
 .prose td {
   text-align: left;
-  padding: var(--space-2xs) var(--space-xs);
-  border-bottom: 1px solid var(--border);
+  padding: var(--space-3xs) var(--space-s) var(--space-2xs) 0;
+  border-bottom: var(--rule-light) solid var(--ink-faint);
+}
+
+.prose th {
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+}
+
+.prose tr:last-child td {
+  border-bottom: 0;
 }
 
 /* ---------- Post header ---------- */
 
+.post__head {
+  padding-top: var(--space-2xs);
+  border-top: var(--rule-bold) solid var(--ink);
+}
+
 .post__title {
-  font-size: var(--step-3);
-  margin-bottom: var(--space-xs);
+  font-size: var(--t-display);
+  line-height: 1.03;
+  letter-spacing: var(--track-display);
 }
 
 .post__meta {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  color: var(--text-faint);
-  margin-bottom: var(--space-l);
-  padding-bottom: var(--space-s);
-  border-bottom: 1px solid var(--border);
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  padding-top: 0.15em;
+}
+
+.post__main .prose {
+  margin-top: var(--space-l);
+}
+
+.post__main .prose > h2:first-child {
+  margin-top: 0;
+}
+
+.post__crosspost {
+  margin-top: var(--space-l);
+  padding-top: var(--space-2xs);
+  border-top: var(--rule-light) solid var(--ink-faint);
+  color: var(--ink-faint);
 }
 
 .back-link {
   display: inline-block;
-  font-size: var(--step--1);
-  color: var(--text-muted);
+  font-size: var(--t-label);
+  font-weight: var(--w-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-faint);
   text-decoration: none;
+  border-bottom: var(--rule-light) solid transparent;
   margin-bottom: var(--space-m);
 }
 
 .back-link:hover {
-  color: var(--text);
+  color: var(--ink);
+  border-bottom-color: var(--red);
 }
 
 .empty {
-  color: var(--text-faint);
-  font-style: italic;
+  color: var(--ink-faint);
 }

@@ -32,7 +32,7 @@ const fmtFull = (d: Date) =>
   ) : (
     <ul class="feed">
       {items.map((item) => (
-        <li class="feed__item">
+        <li class="feed__item grid hangs">
           <time
             class="feed__date"
             datetime={item.date.toISOString()}
@@ -44,24 +44,24 @@ const fmtFull = (d: Date) =>
           <div>
             {item.kind === "post" ? (
               <>
+                {/* The kind sits on its own line above the title rather than inside
+                    it, so the heading's accessible name is just the title. */}
+                <span class="label feed__kind">Wrote</span>
                 <h3 class="feed__title">
-                  <span class="feed__label feed__label--post">Wrote</span>
                   <Link href={item.href}>{item.title}</Link>
                 </h3>
                 <p class="feed__desc">{item.description}</p>
               </>
             ) : (
               <>
+                <span class="label feed__kind">
+                  Shipped — {item.commits.length} commit
+                  {item.commits.length === 1 ? "" : "s"}
+                </span>
                 <h3 class="feed__title">
-                  <span class="feed__label">Shipped</span>
                   <Link href={`https://github.com/${item.repo}`}>
                     {item.repoName}
                   </Link>
-                  <span class="section__aside">
-                    {" "}
-                    {item.commits.length} commit
-                    {item.commits.length === 1 ? "" : "s"}
-                  </span>
                 </h3>
                 <ul class="feed__commits">
                   {item.commits.slice(0, commitsPerItem).map((c) => (

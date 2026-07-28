@@ -12,11 +12,15 @@ type Props = {
 
 const { data, label } = Astro.props;
 
+// Whole-pixel bar and gap, square corners. The bars are printer's marks, not a chart
+// widget — nothing here should be rounded or antialiased into a smear.
 const BAR = 3;
-const GAP = 1.5;
-const HEIGHT = 18;
+const GAP = 2;
+const HEIGHT = 16;
 const max = Math.max(1, ...data);
 const width = data.length * (BAR + GAP) - GAP;
+// One extra pixel below the bars carries the baseline rule.
+const TOTAL_H = HEIGHT + 1;
 
 // "Hot" = the trailing quarter, so recent work is visually distinct from history.
 const hotFrom = data.length - 13;
@@ -26,27 +30,34 @@ const total = data.reduce((a, b) => a + b, 0);
 <svg
   class="sparkline"
   width={width}
-  height={HEIGHT}
-  viewBox={`0 0 ${width} ${HEIGHT}`}
+  height={TOTAL_H}
+  viewBox={`0 0 ${width} ${TOTAL_H}`}
   role="img"
   aria-label={`${label}: ${total} commits over the last ${data.length} weeks`}
 >
   {
-    data.map((value, i) => {
-      // Floor at 1px so a zero-week still reads as a tick rather than a gap.
-      const h =
-        value === 0 ? 1 : Math.max(2, Math.round((value / max) * HEIGHT));
-      return (
+    /*
+    The bars sit on a rule rather than floating. The previous version floored every
+    zero-week at a 1px tick so the run wouldn't break — but on a repo with a long
+    quiet stretch that produced a row of evenly spaced dots that read as a dashed
+    border, not as data. The baseline carries continuity now, so a zero week can be
+    what it actually is: nothing above the line.
+  */
+  }
+  <rect class="sparkline__base" x="0" y={HEIGHT} width={width} height="1"
+  ></rect>
+
+  {
+    data.map((value, i) =>
+      value === 0 ? null : (
         <rect
           x={i * (BAR + GAP)}
-          y={HEIGHT - h}
+          y={HEIGHT - Math.max(2, Math.round((value / max) * HEIGHT))}
           width={BAR}
-          height={h}
-          rx={1}
-          data-hot={i >= hotFrom && value > 0 ? "true" : "false"}
-          opacity={value === 0 ? 0.35 : 1}
+          height={Math.max(2, Math.round((value / max) * HEIGHT))}
+          data-hot={i >= hotFrom ? "true" : "false"}
         />
-      );
-    })
+      ),
+    )
   }
 </svg>

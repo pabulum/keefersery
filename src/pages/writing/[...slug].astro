@@ -32,30 +32,48 @@ const fmt = (d: Date) =>
 >
   <a class="back-link" href="/writing/">← Writing</a>
 
-  <article>
-    <h1 class="post__title">{post.data.title}</h1>
+  {
+    /* Same rail as every other page: metadata left, content on the one column body
+      text always starts from. */
+  }
+  <article class="post__head grid">
     <p class="post__meta">
       <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
-      {readingTime && ` · ${readingTime}`}
-      {post.data.draft && " · draft"}
+      {
+        readingTime && (
+          <>
+            <br />
+            {readingTime}
+          </>
+        )
+      }
+      {
+        post.data.draft && (
+          <>
+            <br />
+            Draft
+          </>
+        )
+      }
     </p>
 
-    <div class="prose">
-      <Content />
-    </div>
+    <div class="post__main">
+      <h1 class="post__title">{post.data.title}</h1>
 
-    {
-      post.data.crosspost && (
-        <p
-          class="post__meta"
-          style="margin-top: var(--space-l); border: 0; padding: 0;"
-        >
-          Also posted at{" "}
-          <Link href={post.data.crosspost}>
-            {new URL(post.data.crosspost).hostname}
-          </Link>
-        </p>
-      )
-    }
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        post.data.crosspost && (
+          <p class="post__crosspost">
+            Also posted at{" "}
+            <Link href={post.data.crosspost}>
+              {new URL(post.data.crosspost).hostname}
+            </Link>
+          </p>
+        )
+      }
+    </div>
   </article>
 </Base>

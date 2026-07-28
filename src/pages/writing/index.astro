@@ -26,11 +26,12 @@ const posts = (await getCollection("writing"))
       ) : (
         <ul class="feed">
           {posts.map((post) => (
-            <li class="feed__item">
+            <li class="feed__item grid hangs">
               <time class="feed__date" datetime={post.data.date.toISOString()}>
                 {post.data.date.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
+                  year: "numeric",
                   timeZone: "UTC",
                 })}
               </time>

@@ -7,9 +7,11 @@ import Link from "./Link.astro";
 type Props = {
   project: Project;
   activity?: RepoActivity;
+  /** 1-based position in the ranked list, set in the rail as 01, 02, … */
+  index: number;
 };
 
-const { project, activity } = Astro.props;
+const { project, activity, index } = Astro.props;
 
 const repoUrl = `https://github.com/${project.repo}`;
 
@@ -38,47 +40,58 @@ const relative = (iso: string) => {
 };
 ---
 
-<article class="project">
-  <div class="project__top">
+<article class="project grid hangs">
+  {
+    /* The rail. Aria-hidden because the number is a position on the grid, not a fact
+      about the project — the list order already carries it for a screen reader. */
+  }
+  <p class="project__index" aria-hidden="true">
+    {String(index).padStart(2, "0")}
+  </p>
+
+  <div>
     <h3 class="project__name">
       <Link href={project.liveUrl}>{project.name}</Link>
     </h3>
+
+    <p class="project__tagline">{project.tagline}</p>
+
     {
       activity?.lastCommit && (
-        <div class="meta">
+        <div class="meta" style="margin-top: var(--space-s)">
           <Sparkline data={activity.weeklyHistogram} label={project.name} />
           <span>{activity.commitCount} commits</span>
-          <span class="meta__dot">
-            last push {relative(activity.lastCommit)}
-          </span>
+          <span>Last push {relative(activity.lastCommit)}</span>
         </div>
       )
     }
-  </div>
 
-  <p class="project__tagline">{project.tagline}</p>
+    <p class="project__insight">
+      {
+        emphasized(project.insight).map((part) =>
+          part.em ? <em>{part.text}</em> : part.text,
+        )
+      }
+    </p>
 
-  <p class="project__insight">
-    {
-      emphasized(project.insight).map((part) =>
-        part.em ? <em>{part.text}</em> : part.text,
-      )
-    }
-  </p>
+    <ul class="project__stack label">
+      {project.stack.map((tech) => <li>{tech}</li>)}
+    </ul>
 
-  <ul class="project__stack">
-    {project.stack.map((tech) => <li>{tech}</li>)}
-  </ul>
-
-  <div class="project__links">
-    <Link href={project.liveUrl}>Open the app →</Link>
-    <Link href={repoUrl}>Source</Link>
-    {
-      activity?.firstCommit && activity.lastCommit && (
-        <span class="section__aside">
-          {fmt(activity.firstCommit)} – {fmt(activity.lastCommit)}
-        </span>
-      )
-    }
+    <div class="project__foot">
+      {
+        /* No literal arrow — Link already appends the new-tab indicator, and two
+          glyphs saying "this goes somewhere" is one too many. */
+      }
+      <Link href={project.liveUrl}>Open the app</Link>
+      <Link href={repoUrl}>Source</Link>
+      {
+        activity?.firstCommit && activity.lastCommit && (
+          <span class="section__aside data">
+            {fmt(activity.firstCommit)} – {fmt(activity.lastCommit)}
+          </span>
+        )
+      }
+    </div>
   </div>
 </article>

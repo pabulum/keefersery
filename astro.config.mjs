@@ -18,6 +18,17 @@ export default defineConfig({
       mdastPlugins: [remarkReadingTime],
       hastPlugins: [externalLinks({ isExternal })],
     }),
-    shikiConfig: { theme: "github-dark-dimmed", wrap: true },
+    // `github-dark-dimmed` painted every code block a blue-grey that belonged to no
+    // other part of the site, and being a single theme it only ever suited one colour
+    // scheme. Shipping both halves lets the stylesheet swap them with the palette.
+    //
+    // The `min-*` pair was tried first — it is by far the most restrained thing Shiki
+    // ships, which is the right instinct here — but its dimmer tokens fall under 3:1
+    // once the block sits on the sheet's own tint rather than the theme's near-black.
+    // Unreadable code is not restraint. GitHub's pair is louder and contrast-checked.
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark" },
+      wrap: true,
+    },
   },
 });

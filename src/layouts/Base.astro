@@ -2,6 +2,11 @@
 import { getNav } from "../data/nav";
 import { SITE } from "../data/site";
 import Link from "../components/Link.astro";
+// Inter, self-hosted and bundled at build time. The `opsz` cut carries Inter's
+// optical-size axis, so display sizes tighten and small sizes open up from one file
+// instead of two families. Subsets are unicode-ranged — an English page fetches latin
+// only, ~73kB.
+import "@fontsource-variable/inter/opsz.css";
 import "../styles/global.css";
 
 type Props = {
@@ -77,6 +82,21 @@ const personSchema = {
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
+    {
+      /* Applies a stored theme choice before first paint. This has to be inline and
+         in <head> — deferred or bundled, it would run after the browser has already
+         painted the system-preference colours, and every visit with a non-default
+         choice would flash the wrong scheme. No stored choice leaves the attribute
+         off entirely, which is what hands control back to prefers-color-scheme. */
+    }
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark")
+          document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+
     <script
       is:inline
       type="application/ld+json"
@@ -87,47 +107,127 @@ const personSchema = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="shell">
-      <header class="site-header">
-        <a class="site-header__name" href="/">{SITE.name}</a>
-        <nav class="site-nav" aria-label="Primary">
-          {
-            nav.map((item) => (
-              <Link
-                href={item.href}
-                aria-current={item.current(path) ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))
-          }
-        </nav>
-      </header>
+    {
+      /* The page is a printed sheet: a plane of spot colour at the head, and the three
+        surface layers appended at the end of it. */
+    }
+    <div class="sheet">
+      <div class="sheet__band"></div>
 
-      <main id="main">
-        <slot />
-      </main>
-
-      <footer class="site-footer">
-        <span>© {new Date().getFullYear()} {SITE.name}</span>
-        <span>
-          <Link href={`mailto:${SITE.email}`}>{SITE.email}</Link>
-          {
-            SITE.profiles.map((p) => (
-              <>
-                {" "}
-                ·{" "}
-                <Link href={p.url} rel="me">
-                  {p.label}
+      <div class="sheet__inner">
+        <header class="masthead">
+          <a class="masthead__name" href="/">{SITE.name}</a>
+          <nav class="masthead__nav label" aria-label="Primary">
+            {
+              nav.map((item) => (
+                <Link
+                  href={item.href}
+                  aria-current={item.current(path) ? "page" : undefined}
+                >
+                  {item.label}
                 </Link>
-              </>
-            ))
-          }
-        </span>
-        <span class="site-footer__note">
-          Views here are my own and don't represent {SITE.employer.name}.
-        </span>
-      </footer>
+              ))
+            }
+            <button class="theme-toggle" type="button" id="theme-toggle" hidden>
+            </button>
+          </nav>
+        </header>
+
+        <main id="main">
+          <slot />
+        </main>
+
+        <footer class="colophon grid">
+          <p class="label data">© {new Date().getFullYear()}</p>
+
+          <div class="colophon__body">
+            <p class="colophon__contact">
+              <Link href={`mailto:${SITE.email}`}>{SITE.email}</Link>
+              {
+                SITE.profiles.map((p) => (
+                  <Link href={p.url} rel="me">
+                    {p.label}
+                  </Link>
+                ))
+              }
+            </p>
+            <p>
+              Views here are my own and don't represent {SITE.employer.name}.
+            </p>
+          </div>
+        </footer>
+      </div>
+
+      {
+        /* The sheet's own surface, above its type — ink is printed into a material, so
+          the material sits on top of it. The lamp is not here: it lights the desk and
+          the sheet as one, so it lives on the page rather than on this element.
+          Decorative only, so both stay out of the accessibility tree. */
+      }
+      <div class="sheet__crumple" aria-hidden="true"></div>
+      <div class="sheet__grain" aria-hidden="true"></div>
     </div>
+
+    {
+      /* Wires up the theme control: a straight Light/Dark switch, with the system
+         preference deciding where it starts.
+
+         Until the visitor actually picks a side, nothing is stored and no attribute is
+         set — the page is still being driven by prefers-color-scheme, so a system that
+         flips at sunset still flips the site. The matchMedia listener exists only to
+         keep the button's own label honest while that is the case.
+
+         The button ships hidden and is revealed here, so it never appears without the
+         script that makes it work. */
+    }
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById("theme-toggle");
+        if (!btn) return;
+
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const stored = () => {
+          try {
+            const t = localStorage.getItem("theme");
+            return t === "light" || t === "dark" ? t : null;
+          } catch {
+            return null;
+          }
+        };
+
+        // What the visitor is actually looking at, chosen or inherited.
+        const effective = () =>
+          stored() ?? (systemDark.matches ? "dark" : "light");
+
+        const paint = () => {
+          const now = effective();
+          btn.textContent = now === "dark" ? "Dark" : "Light";
+          // The visible word names the *current* mode, so the accessible name has to
+          // spell out the action separately — on its own, "Dark" reads as a promise
+          // about what a click will do, which is the opposite of what it means.
+          btn.setAttribute(
+            "aria-label",
+            `Theme: ${now}. Switch to ${now === "dark" ? "light" : "dark"}.`,
+          );
+        };
+
+        paint();
+        btn.hidden = false;
+
+        btn.addEventListener("click", () => {
+          const next = effective() === "dark" ? "light" : "dark";
+          document.documentElement.dataset.theme = next;
+          try {
+            localStorage.setItem("theme", next);
+          } catch {}
+          paint();
+        });
+
+        systemDark.addEventListener("change", () => {
+          if (!stored()) paint();
+        });
+      })();
+    </script>
   </body>
 </html>
