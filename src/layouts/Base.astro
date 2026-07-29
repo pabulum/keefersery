@@ -22,7 +22,7 @@ type Props = {
 
 const {
   title,
-  description = SITE.tagline,
+  description,
   article,
   image = "/og.png",
   imageAlt = `${SITE.name} — ${SITE.role}`,
@@ -31,7 +31,22 @@ const {
 const pageTitle = title
   ? `${title} — ${SITE.name}`
   : `${SITE.name} — ${SITE.role}`;
+const metaDescription = description ?? SITE.tagline;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
+
+/*
+ * A preview card is three stacked lines — site name, heading, description — and an
+ * unfurler draws all three whether or not they say different things. Only the home
+ * page has no title of its own, and falling back to the site name there put "Keefer
+ * Sery" in the site line and the heading at once, with the role following in the
+ * description: one card, the same two facts three times.
+ *
+ * So the home page's heading is the role, sitting under a site line that already
+ * carries the name, and its description drops the role sentence it would otherwise
+ * repeat. Every other page passes a real title and is unaffected.
+ */
+const ogTitle = title ?? SITE.role;
+const ogDescription = description ?? (title ? SITE.tagline : SITE.pitch);
 // Every scraper that matters resolves og:image against nothing at all — a root-relative
 // path is the single most common way a preview silently comes back blank.
 const ogImage = new URL(image, SITE.url).href;
@@ -62,7 +77,7 @@ const personSchema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
@@ -73,8 +88,8 @@ const personSchema = {
     />
 
     <meta property="og:type" content={article ? "article" : "website"} />
-    <meta property="og:title" content={title ?? SITE.name} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content="en_US" />
