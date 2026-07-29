@@ -1,13 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <!-- Fixed colors rather than currentColor: favicons render outside the page's
-       cascade, so a theme-reactive fill would just come out black in most browsers. -->
-  <rect width="64" height="64" rx="14" fill="#1f5f9e" />
+       cascade, so a theme-reactive fill would just come out black in most browsers.
+       The two values are the site's only two inks, the primary red on the light
+       sheet stock, so the mark is the spot colour printed on the paper. Held flat in
+       both schemes for the same reason the band is: it is one red, not a red per
+       background.
+
+       Square, not rounded. The stylesheet has no border-radius in it at all, and the
+       old icon's 14-unit radius was the one soft corner in the system. Butt caps and
+       mitred joins for the same reason.
+
+       Do not write the CSS token names in here. A double hyphen is illegal inside an
+       XML comment, so naming them makes the whole file fail to parse and the icon
+       silently disappears. -->
+  <rect width="64" height="64" fill="#eb0000" />
   <path
-    d="M20 16v32M20 32l16-16M20 32l17 16"
-    stroke="#ffffff"
-    stroke-width="6.5"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    d="M20 13v38M20 32L43 13M20 32l24 19"
+    stroke="#f5f2eb"
+    stroke-width="9"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
     fill="none"
   />
 </svg>

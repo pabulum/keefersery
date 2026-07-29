@@ -6,6 +6,26 @@
     "language": "JavaScript",
     "commits": [
       {
+        "sha": "157411536ead713ba513339a32fe5e0b6c04a481",
+        "shortSha": "1574115",
+        "message": "Season 2 rewards",
+        "title": "Season 2 rewards",
+        "date": "2026-07-29T01:37:14Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/157411536ead713ba513339a32fe5e0b6c04a481",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "2a1a24f4dd2b8599f1c044098f6c2dd106eddad3",
+        "shortSha": "2a1a24f",
+        "message": "Date parsing fix; more sig figs; use simc value for vault over report",
+        "title": "Date parsing fix; more sig figs; use simc value for vault over report",
+        "date": "2026-07-29T00:55:41Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/2a1a24f4dd2b8599f1c044098f6c2dd106eddad3",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
         "sha": "5e62608a534a4f1e79527728ada6e811c809ef73",
         "shortSha": "5e62608",
         "message": "Fix amiguous spec (e.g. Holy)",
@@ -256,10 +276,10 @@
         "repoName": "SlowYourRoll"
       }
     ],
-    "commitCount": 25,
-    "lastCommit": "2026-07-27T14:04:54Z",
+    "commitCount": 27,
+    "lastCommit": "2026-07-29T01:37:14Z",
     "firstCommit": "2026-07-20T13:30:56Z",
-    "recentCommitCount": 25,
+    "recentCommitCount": 27,
     "weeklyHistogram": [
       0,
       0,
@@ -285,8 +305,8 @@
       0,
       0,
       0,
-      3,
-      22
+      9,
+      18
     ]
   },
   "pabulum/vibelock": {
@@ -1240,12 +1260,12 @@
       0,
       0,
       0,
-      3,
+      6,
       10,
-      23,
-      19,
-      14,
-      19,
+      22,
+      18,
+      15,
+      17,
       4
     ]
   }

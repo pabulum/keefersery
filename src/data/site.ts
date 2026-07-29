@@ -6,7 +6,10 @@ export const SITE = {
   url: "https://keefersery.com",
   role: "Product engineer",
 
-  tagline: "Product engineer",
+  /** Default <meta name="description"> for every page without its own, and the
+   *  schema.org `description`. Needs to read as a search-result snippet. */
+  tagline:
+    "Product engineer. Live projects built in the open, with the reasoning behind each one.",
 
   /** Routed through Cloudflare Email Routing. Keep catch-all off there. */
   email: "me@keefersery.com",

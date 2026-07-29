@@ -1024,6 +1024,14 @@ main {
   display: grid;
   gap: var(--space-3xs);
   max-width: var(--measure);
+
+  /* The id column, sized once so every row shares it and the messages start on one
+     hard left edge. `slice(0, 7)` in github.ts fixes the id at seven characters, and
+     no hex glyph in Inter is wider than a tabular digit, so 8ch covers the id and its
+     tracking as an upper bound rather than an estimate. The second term is the
+     new-tab icon these links carry: .external-icon is 0.8em wide with a 0.3em start
+     margin, and leaving it out of the measurement wraps it onto its own line. */
+  --sha-col: calc(8ch + 1.1em);
 }
 
 .feed__commits li {
@@ -1033,25 +1041,41 @@ main {
   align-items: baseline;
 }
 
-/* Commit ids read as codes — tracked, tabular, in the label register — rather than
-   reaching for a second typeface to say "this is machine output". */
+/*
+ * Commit ids are catalog numbers: same size as the entry they label, set apart by
+ * tracking, tabular figures and colour rather than by shrinking. Dropping them into
+ * the label register made them footnotes to their own messages, and left every
+ * message starting at a different x because hex letters aren't tabular.
+ *
+ * Roman, not bold. Bold was carrying legibility at 11px; at body size it stops being
+ * support and starts being emphasis, and a column of emphasised ids outweighs the
+ * messages they belong to. The id is the reference, not the record.
+ *
+ * Flush left, not right-aligned. Every other rail on the page hangs from a left edge,
+ * and a right-aligned column here would be a second alignment convention bought for
+ * one list.
+ */
 .feed__sha {
-  font-size: var(--t-label);
-  font-weight: var(--w-bold);
+  font-size: var(--t-body);
+  font-weight: var(--w-roman);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
   color: var(--ink-faint);
   text-decoration: none;
   border-bottom: var(--rule-light) solid transparent;
   flex-shrink: 0;
+  width: var(--sha-col);
 }
 
 .feed__sha:hover {
   border-bottom-color: var(--red);
 }
 
+/* Reads as the last row of the list, so it starts in the message column, not the
+   id column. */
 .feed__more {
   color: var(--ink-faint);
+  padding-left: calc(var(--sha-col) + var(--space-s));
 }
 
 /* ---------- Prose ---------- */

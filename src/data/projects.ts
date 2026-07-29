@@ -32,10 +32,9 @@ export const PROJECTS: Project[] = [
     name: "Vibelock",
     repo: "pabulum/vibelock",
     liveUrl: "https://pabulum.github.io/vibelock/",
-    tagline:
-      "Data-driven item builds for the game Deadlock, generated from live match data.",
+    tagline: "Item builds for Deadlock, generated from live match data.",
     insight:
-      "Most build sites rank items by win rate, but an item's win rate mostly measures *when* it gets bought — expensive items are bought by players already winning, so they look good regardless of what they do. On live data that raw win rate correlates at r ≈ 0.91 with the win probability that already held at the moment of purchase. Vibelock scores against a net-worth-standardized win rate instead, and fills each phase against a real soul budget rather than ranking items independently, because a build is a correlated set under a constraint — the top-N items scored separately don't compose into one.",
+      "Deadlock build guides rank items by win rate, but win rate mostly records *when* an item gets bought, not what it does. The expensive items are only affordable to players who are already winning, so they inherit a result they had no part in: on live match data, an item's raw win rate tracks the win probability that already held at the moment of purchase at r ≈ 0.91. Vibelock scores each item only against purchases made at a similar net worth, then fills each phase against the budget you'd realistically have, since the five best items rated separately rarely compose into a build you can afford.",
     stack: ["React", "TypeScript", "TanStack Query", "Vite", "Valibot"],
     pinned: true,
   },
@@ -45,7 +44,7 @@ export const PROJECTS: Project[] = [
     liveUrl: "https://pabulum.github.io/SlowYourRoll/",
     tagline: "Expected-value tracker for World of Warcraft bonus rolls.",
     insight:
-      "Ranks every boss you can spend a token on by the expected value of one roll. The subtlety is the denominator: a roll draws from the boss's entire loot table, not just the items your sim report bothered to score, so unscored items have to be filled in at zero value — they dilute the odds without adding upside, exactly as they do in game. That makes loot spec a lever rather than a filter, since switching specs can *remove* items you never wanted and improve the odds on every remaining one.",
+      "A bonus roll buys one extra chance at a boss's loot, and the usual advice is to spend it where you have the most upgrades, or where your best-in-slot item drops. Both fail because a roll draws from the boss's entire loot table, so a long list of upgrades dilutes every individual chance, while a small shot at a big upgrade is often worth less than a good shot at a modest one. Slow Your Roll scores what a roll is actually worth on average, then applies that number to the decisions around it: which boss to spend on, whether the guaranteed item in your weekly vault beats rolling, and whether switching loot specialization would improve the pool.",
     stack: [
       "Vanilla JS",
       "TypeScript (checkJs)",
