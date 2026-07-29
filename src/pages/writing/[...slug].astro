@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import type { GetStaticPaths } from "astro";
 import Base from "../../layouts/Base.astro";
 import Link from "../../components/Link.astro";
+import { SITE } from "../../data/site";
 
 export const getStaticPaths = (async () => {
   // Drafts get no route at all. Without this filter they'd still build to a real URL —
@@ -29,6 +30,8 @@ const fmt = (d: Date) =>
   title={post.data.title}
   description={post.data.description}
   article={{ published: post.data.date }}
+  image={`/og/${post.id}.png`}
+  imageAlt={`${post.data.title} — ${SITE.name}`}
 >
   <a class="back-link" href="/writing/">← Writing</a>
 

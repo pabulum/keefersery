@@ -14,14 +14,27 @@ type Props = {
   description?: string;
   /** Set on article pages so the OG type and JSON-LD describe a post, not the site. */
   article?: { published: Date };
+  /** Root-relative path to this page's link-preview card. Defaults to the site one. */
+  image?: string;
+  /** Describes the card for anyone whose reader announces it. */
+  imageAlt?: string;
 };
 
-const { title, description = SITE.tagline, article } = Astro.props;
+const {
+  title,
+  description = SITE.tagline,
+  article,
+  image = "/og.png",
+  imageAlt = `${SITE.name} — ${SITE.role}`,
+} = Astro.props;
 
 const pageTitle = title
   ? `${title} — ${SITE.name}`
   : `${SITE.name} — ${SITE.role}`;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
+// Every scraper that matters resolves og:image against nothing at all — a root-relative
+// path is the single most common way a preview silently comes back blank.
+const ogImage = new URL(image, SITE.url).href;
 const path = Astro.url.pathname;
 const nav = await getNav();
 
@@ -64,13 +77,28 @@ const personSchema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="en_US" />
+
+    {
+      /* Built by src/lib/og.ts. The dimensions are stated so a scraper can reserve the
+         slot before it has fetched the file — several render the card from the tags
+         alone and never come back for the image. */
+    }
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     {
       article && (
-        <meta
-          property="article:published_time"
-          content={article.published.toISOString()}
-        />
+        <>
+          <meta
+            property="article:published_time"
+            content={article.published.toISOString()}
+          />
+          <meta property="article:author" content={SITE.url} />
+        </>
       )
     }
 
