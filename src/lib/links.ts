@@ -3,7 +3,10 @@
  * correct by construction rather than by remembering to add two attributes.
  */
 
-import { SITE } from "../data/site";
+// Explicit `.ts`, unlike the extensionless imports elsewhere in the project: this
+// module is unit-tested with `node --test`, which runs it through Node's own resolver
+// rather than Vite's, and Node's ESM resolver does not guess extensions. See CLAUDE.md.
+import { SITE } from "../data/site.ts";
 
 const SITE_HOST = new URL(SITE.url).host;
 

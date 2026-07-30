@@ -1,0 +1,98 @@
+name: Verify
+
+# Called, never triggered directly. Both entry points — pr.yml for pull requests and
+# deploy.yml for main/nightly — delegate here, so the checks guarding a PR and the
+# checks guarding a deploy are the same job by construction and cannot drift.
+on:
+  workflow_call:
+
+concurrency:
+  # `github.workflow` is the *caller's* name, so a PR's verify and a deploy's verify
+  # land in different groups and never cancel one another.
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  # Superseding a PR push should cancel the stale run; superseding a deploy should not.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Reads .nvmrc, so CI and local development cannot disagree about Node.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Cheap, deterministic checks first. A formatting or type error should not wait on
+      # a browser download, OG image rendering, and the GitHub API.
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Types and templates
+        run: npm run check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          # Lifts the GitHub API rate limit from 60/hr to 5000/hr for the activity fetch.
+          # Note src/lib/github.ts throws under CI rather than quietly dropping a pinned
+          # project it could not fetch.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Everything below needs the built site.
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      # Proves the Content Security Policy does not block the site's own inline theme
+      # scripts — a failure that is invisible to every check above it, because the build
+      # succeeds and the HTML is correct either way.
+      - name: Browser tests
+        run: npm run test:e2e
+
+      # Performance and accessibility budgets. Asserts, among other things, that the
+      # site still ships zero bytes of JavaScript and makes zero third-party requests.
+      - name: Lighthouse budgets
+        run: npx lhci autorun
+
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-diagnostics
+          path: |
+            test-results/
+            playwright-report/
+            .lighthouseci/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      # Handing the built site to the caller means Deploy publishes the exact bytes that
+      # passed above, rather than rebuilding and assuming the same output.
+      - name: Upload site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+      # The build refreshes the committed API fallback. deploy.yml's refresh-cache job
+      # commits this back on the nightly run — see that workflow for why.
+      - name: Upload refreshed activity cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-cache
+          path: src/data/activity-cache.json
+          retention-days: 7
+          if-no-files-found: error

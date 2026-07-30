@@ -18,6 +18,12 @@ type Props = {
   image?: string;
   /** Describes the card for anyone whose reader announces it. */
   imageAlt?: string;
+  /**
+   * Keeps the page out of search indexes. For pages that resolve successfully but
+   * have nothing worth ranking — the 404 (a soft-404 that gets indexed is worse
+   * than one nobody sees) and a section index with no entries yet.
+   */
+  noindex?: boolean;
 };
 
 const {
@@ -26,6 +32,7 @@ const {
   article,
   image = "/og.png",
   imageAlt = `${SITE.name} — ${SITE.role}`,
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = title
@@ -79,6 +86,11 @@ const personSchema = {
     <title>{pageTitle}</title>
     <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonical} />
+    {
+      /* `noindex` alone still lets a crawler follow the links out, which is what you
+         want on a 404 — the recovery links are the only useful thing on the page. */
+    }
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="alternate"

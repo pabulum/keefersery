@@ -15,24 +15,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  # The gate. Nothing reaches Cloudflare that has not passed formatting, types, tests
+  # and a clean build first — this workflow previously went straight from `npm ci` to a
+  # deploy, so the only consequence of a type error was a red check after the fact.
+  verify:
+    uses: ./.github/workflows/verify.yml
+    secrets: inherit
+
+  deploy:
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      # No checkout and no rebuild: the artifact *is* the verified output, so what ships
+      # is bit-for-bit what the gate approved rather than a second build assumed to
+      # match it.
+      - name: Download verified site
+        uses: actions/download-artifact@v4
         with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - run: npm run build
-        env:
-          # Lifts the GitHub API rate limit from 60/hr to 5000/hr for the activity fetch.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: site
+          path: dist
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -40,3 +44,42 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=keefersery --branch=main
+
+  # Keeps the committed API fallback from going stale.
+  #
+  # src/data/activity-cache.json is what the build falls back to when the GitHub API is
+  # unreachable, but CI used to write it and then throw it away — so the committed copy
+  # only refreshed when a local build happened to be committed by hand, and it aged out
+  # of usefulness in between. Writing it back once a night fixes that.
+  #
+  # Loop-safe by construction: a push authenticated with the default GITHUB_TOKEN does
+  # not trigger workflow runs, so this cannot retrigger Deploy.
+  refresh-cache:
+    needs: verify
+    # Nightly only. On an ordinary push the deployed site is already current and the
+    # fallback is at most one commit behind, which is not worth a commit per push.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download refreshed activity cache
+        uses: actions/download-artifact@v4
+        with:
+          name: activity-cache
+          path: src/data
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/data/activity-cache.json; then
+            echo "Activity cache unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/activity-cache.json
+          git commit -m "Refresh activity cache fallback"
+          git push

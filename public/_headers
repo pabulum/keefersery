@@ -1,0 +1,50 @@
+# Cloudflare Pages reads this file from the deploy root and applies it as response
+# headers. Rules are matched top to bottom; every matching rule contributes.
+#
+# Note the split from `_astro/*` below: Astro content-hashes the filenames it emits
+# there, so those are safe to cache forever, while anything at a stable path is not.
+
+/*
+  # Stops a browser from second-guessing a declared Content-Type — the mechanism
+  # behind "upload a .txt that executes as script".
+  X-Content-Type-Options: nosniff
+
+  # Send the full URL within the site, origin only when leaving it. Keeps the
+  # referrer useful for our own analytics without leaking paths to third parties.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Nothing here is meant to be embedded. `frame-ancestors` in the CSP is the modern
+  # form; this stays for older browsers that only understand the header.
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+
+  # The site asks for no device APIs at all, so deny them by default rather than
+  # relying on nothing ever requesting one.
+  Permissions-Policy: accelerometer=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), microphone=(), midi=(), payment=(), usb=()
+
+  # Isolates this origin's browsing context group from anything it opens.
+  Cross-Origin-Opener-Policy: same-origin
+
+  # Two years, no `includeSubDomains` and no `preload`. Both of those are effectively
+  # irreversible for the length of the max-age, and the apex domain is not fully moved
+  # onto Cloudflare yet (see README → DNS). Add them deliberately, once it is.
+  Strict-Transport-Security: max-age=63072000
+
+# Covers the self-hosted Inter subsets too — @fontsource is bundled through Vite, so
+# the woff2 files land here rather than at a path of their own.
+/_astro/*
+  # Content-hashed filenames: a change ships under a new name, so a stale cache entry
+  # can never be served for the wrong content.
+  Cache-Control: public, max-age=31536000, immutable
+
+# Link-preview cards live at stable paths and are regenerated whenever copy changes,
+# so they must stay revalidatable. Scrapers cache them hard on their own side anyway.
+/og.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/og/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Feed readers poll these; an hour is a reasonable floor between fetches.
+/rss.xml
+  Cache-Control: public, max-age=3600

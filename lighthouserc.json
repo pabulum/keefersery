@@ -1,0 +1,84 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./dist",
+      "url": [
+        "http://localhost/index.html",
+        "http://localhost/writing/index.html",
+        "http://localhost/404.html"
+      ],
+      "numberOfRuns": 3,
+      "settings": { "preset": "desktop" }
+    },
+
+    "assert": {
+      "assertMatrix": [
+        {
+          "//": "Indexable pages. Full strict SEO.",
+          "//script-budget": "`script:size: 0` is a tripwire, not a policy: the site happens to ship no JS bundles today, so 0 is the honest current value and the check tells you the moment something starts pulling one in unintentionally. When you deliberately add client-side code, raise this to a real ceiling — it is a budget to set, not a rule to obey. Same for third-party:count.",
+          "matchingUrlPattern": "^http://[^/]+/index\\.html$",
+          "assertions": {
+            "categories:performance": ["error", { "minScore": 0.98 }],
+            "categories:accessibility": ["error", { "minScore": 1 }],
+            "categories:best-practices": ["error", { "minScore": 1 }],
+            "categories:seo": ["error", { "minScore": 1 }],
+
+            "resource-summary:script:size": ["error", { "maxNumericValue": 0 }],
+            "resource-summary:third-party:count": [
+              "error",
+              { "maxNumericValue": 0 }
+            ],
+            "resource-summary:document:size": [
+              "error",
+              { "maxNumericValue": 12000 }
+            ],
+            "resource-summary:stylesheet:size": [
+              "error",
+              { "maxNumericValue": 8000 }
+            ],
+            "resource-summary:font:size": [
+              "error",
+              { "maxNumericValue": 90000 }
+            ],
+            "resource-summary:total:size": [
+              "error",
+              { "maxNumericValue": 110000 }
+            ],
+
+            "unused-css-rules": "off",
+            "uses-long-cache-ttl": "off"
+          }
+        },
+        {
+          "//": "Pages that carry <meta name=robots content=noindex> on purpose: the 404, and the writing index while it has nothing to list. Lighthouse scores `is-crawlable` as a failure, which drops the SEO category to 0.66 — correct in general, wrong here. The audit is switched off for these two and the rest of the SEO category still applies, so a real regression (missing title, bad canonical) is still caught.",
+          "matchingUrlPattern": "^http://[^/]+/(404\\.html|writing/index\\.html)$",
+          "assertions": {
+            "categories:performance": ["error", { "minScore": 0.98 }],
+            "categories:accessibility": ["error", { "minScore": 1 }],
+            "categories:best-practices": ["error", { "minScore": 1 }],
+            "is-crawlable": "off",
+            "document-title": ["error", { "minScore": 1 }],
+            "meta-description": ["error", { "minScore": 1 }],
+            "canonical": ["error", { "minScore": 1 }],
+
+            "resource-summary:script:size": ["error", { "maxNumericValue": 0 }],
+            "resource-summary:third-party:count": [
+              "error",
+              { "maxNumericValue": 0 }
+            ],
+            "resource-summary:total:size": [
+              "error",
+              { "maxNumericValue": 110000 }
+            ],
+
+            "unused-css-rules": "off",
+            "uses-long-cache-ttl": "off"
+          }
+        }
+      ]
+    },
+
+    "//upload": "Reports stay in .lighthouseci/ and are uploaded as a CI artifact only when a run fails. Deliberately not `temporary-public-storage`, which would publish a full report of every build to a third-party host on every push.",
+    "upload": { "target": "filesystem", "outputDir": ".lighthouseci/reports" }
+  }
+}

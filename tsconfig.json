@@ -1,5 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "compilerOptions": {
+    // Lets `src/lib/*` import its dependencies with an explicit `.ts` extension, which
+    // is what makes those modules loadable by `node --test` directly — Node's ESM
+    // resolver will not infer an extension. Safe here because nothing type-checks to
+    // emitted JS: Vite does the compiling and `astro check` is `noEmit`.
+    "allowImportingTsExtensions": true
+  }
 }

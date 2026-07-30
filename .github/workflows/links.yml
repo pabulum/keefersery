@@ -1,0 +1,104 @@
+name: Links
+
+# Link rot is the quiet failure mode for a site whose pitch is "live projects built in
+# the open". Every outbound link here is load-bearing — the deployed app for each
+# project, the crosspost targets, and the rel="me" profiles that the identity
+# verification depends on — and none of them fail in a way anything else would notice.
+#
+# Weekly rather than per-push: nothing in a commit makes a third-party URL rot, and a
+# flaky remote host should not be able to block a deploy.
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: links
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Checks the built site rather than the sources: that way project liveUrls, profile
+      # links, crosspost targets and prose links are all covered by walking the real
+      # output, with no second list of URLs to keep in sync.
+      - run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        env:
+          # The activity feed links every bundled commit to github.com, so a single run
+          # makes a lot of requests to one host. Authenticated, those are rate-limited at
+          # 5000/hr instead of 60 — without this the check reports its own throttling as
+          # link rot.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Internal hrefs resolve against dist/ as plain files, so a broken in-site link
+          # is caught alongside the outbound ones.
+          #
+          # `--exclude` covers the dev-server URLs quoted in the README's command block;
+          # they are documentation, not links, and nothing is listening on that port here.
+          args: >-
+            --no-progress
+            --max-retries 2
+            --timeout 20
+            --accept 200,206,301,302,303,307,308
+            --exclude '^http://localhost'
+            --exclude '^https?://127\.0\.0\.1'
+            'dist/**/*.html'
+            'README.md'
+          fail: false
+          output: lychee.md
+
+      # An issue rather than a failed run: a dead link is something to go and fix, and a
+      # red cron on a repo nobody is watching is not a notification.
+      - name: Open or update an issue when links are broken
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Broken links found on keefersery.com
+          content-filepath: lychee.md
+          labels: link-rot
+
+      - name: Close the issue once links are healthy
+        if: steps.lychee.outputs.exit_code == 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'link-rot',
+            });
+            for (const issue of open) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: 'All links resolved on the latest check. Closing.',
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+              });
+            }

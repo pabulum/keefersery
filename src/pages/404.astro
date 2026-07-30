@@ -1,0 +1,36 @@
+---
+/*
+ * Cloudflare Pages serves `/404.html` for any unmatched path on a static project,
+ * so this file is the whole configuration — no `_redirects` rule needed.
+ *
+ * Deliberately built from the same primitives as every other page (`intro`,
+ * `intro__links`) rather than a bespoke block: a 404 is the one page guaranteed to
+ * be seen out of context, so it's the worst place for the chrome to look unfamiliar.
+ * It also means this page adds no CSS of its own to keep in sync.
+ *
+ * The recovery links come from `getNav()` for the same reason the masthead's do — a
+ * hardcoded list here could offer a section the site is currently hiding, which is a
+ * particularly bad way to answer "that page doesn't exist".
+ */
+import Base from "../layouts/Base.astro";
+import Link from "../components/Link.astro";
+import { getNav } from "../data/nav";
+import { SITE } from "../data/site";
+
+const nav = await getNav();
+---
+
+<Base title="Not found" description="That page doesn't exist." noindex>
+  <section class="intro">
+    <h1 class="intro__title">Not found</h1>
+    <p class="intro__lede">
+      That page doesn't exist — it may have been renamed, or the link that
+      brought you here may have been wrong to begin with.
+    </p>
+
+    <nav class="intro__links" aria-label="Recovery">
+      {nav.map((item) => <Link href={item.href}>{item.label}</Link>)}
+      <Link href={`mailto:${SITE.email}`}>{SITE.email}</Link>
+    </nav>
+  </section>
+</Base>

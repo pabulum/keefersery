@@ -1,0 +1,89 @@
+name: PR
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+    secrets: inherit
+
+  # A real URL for every pull request, built from the same artifact that passed verify.
+  #
+  # Worth having on a site whose whole surface is visual: the Playwright suite can prove
+  # nothing overflows and both themes stay readable, but it cannot tell you whether a
+  # redesign looks right. This is the step that lets a human decide that before it is on
+  # the live domain.
+  preview:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Download verified site
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist
+
+      - name: Deploy preview to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Any branch name other than `main` is a preview deployment on Pages, so this
+          # cannot touch production even if the branch is later renamed.
+          command: >-
+            pages deploy dist
+            --project-name=keefersery
+            --branch=pr-${{ github.event.pull_request.number }}
+
+      - name: Comment the preview URL
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.deployment-url }}
+        with:
+          script: |
+            const url = process.env.PREVIEW_URL;
+            if (!url) return;
+
+            const body = [
+              `**Preview:** ${url}`,
+              '',
+              `Built from ${context.payload.pull_request.head.sha.slice(0, 7)}, `
+                + 'from the same artifact that passed verify.',
+            ].join('\n');
+
+            // Update the existing comment rather than adding one per push, so the
+            // thread does not fill with stale preview links.
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const mine = comments.find(
+              (c) => c.user.type === 'Bot' && c.body.startsWith('**Preview:**'),
+            );
+
+            if (mine) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: mine.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

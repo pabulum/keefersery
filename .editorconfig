@@ -1,0 +1,21 @@
+# Prettier owns formatting for everything it can parse; this file exists so the
+# editor agrees with it *while typing*, before a format pass runs. Keep the two in
+# sync — Prettier's defaults are 2-space indent, LF, and a final newline.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown: two trailing spaces is a hard line break, so stripping them silently
+# changes rendered output.
+[*.md]
+trim_trailing_whitespace = false
+
+# npm owns this file's formatting, matching .prettierignore.
+[package-lock.json]
+indent_size = unset

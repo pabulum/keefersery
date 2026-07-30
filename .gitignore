@@ -6,3 +6,14 @@ dist/
 *.log
 .env
 .env.*
+
+# Playwright run output. The baselines under tests/e2e/__screenshots__/ are committed
+# on purpose — they are the reference a comparison runs against — but everything below
+# is per-run and regenerated.
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Lighthouse CI run output. Uploaded as a CI artifact on failure, never committed.
+.lighthouseci/

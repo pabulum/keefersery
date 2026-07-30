@@ -1,0 +1,111 @@
+# keefersery.com
+
+Personal site. Static Astro build, no runtime data fetching, no shipped JavaScript
+bundles. See README.md for what it does and how to edit content; this file is the set of
+constraints that are not obvious from reading the code.
+
+## Before pushing
+
+```bash
+npm run verify       # format, types, unit tests, build — fast, no browser needed
+npm run verify:all   # the above plus the Playwright suite (what CI gates on)
+```
+
+## House style
+
+Comments explain **why**, and name the alternative that was rejected and the reason it
+lost. This is unusually dense for a personal site and it is deliberate — most of the
+non-obvious decisions here are ones that look arbitrary six months later. Match that
+density when editing; a change that removes the reasoning is a regression even if the
+code is equivalent.
+
+Prose favours the specific over the enthusiastic. No exclamation marks, no "simply", no
+marketing register.
+
+## Invariants
+
+**No JavaScript bundles ship today** — and the Lighthouse budget pins that at 0 bytes,
+plus 0 third-party requests. This is a **tripwire, not a policy**: it exists to catch a
+dependency quietly pulling in client-side code, not to forbid writing any. If you add
+client-side code on purpose, raise the ceiling in `lighthouserc.json` in the same commit;
+that is the intended workflow, not a fight with the config.
+
+The only client-side code right now is three inline `<script>` elements in `Base.astro`
+(pre-paint theme, JSON-LD, theme toggle). Note that inline scripts count toward
+`document` size rather than `script`, and each needs a CSP hash — see below.
+
+**All data resolves at build time.** `output: "static"`. The GitHub API is read during
+the build only; the deployed site is plain HTML. Nothing fetches at runtime.
+
+**Quantitative facts are derived, never written down.** Commit counts, date ranges,
+activity, and project ordering all come from the GitHub API via `src/lib/github.ts`.
+`src/data/projects.ts` holds only what a machine cannot derive — what the thing is and
+why it was interesting. If you find yourself typing a number into `src/data/`, it
+probably belongs in a derivation instead.
+
+**One source of truth per fact.** Identity lives in `src/data/site.ts`. The rule for how
+a link opens lives in `src/lib/links.ts`, and `src/lib/external-links.mjs` is _injected_
+with that same predicate rather than reimplementing it. The nav is derived from
+conditions in `src/data/nav.ts`, not declared per page.
+
+## Things that will bite you
+
+**`src/lib/*` must be loadable by plain Node.** The unit suite runs under `node --test`
+with type stripping, which uses Node's ESM resolver — it does not infer extensions. That
+is why `src/lib/links.ts` imports `"../data/site.ts"` with the extension while the rest
+of the project imports extensionlessly and lets Vite resolve. `tsconfig.json` sets
+`allowImportingTsExtensions` for this. Modules in this layer must also avoid importing
+`astro:*` virtual modules at the top level, or they stop being unit-testable.
+
+This is the reason `astro:env` is **not** used for `GITHUB_TOKEN`. Importing
+`astro:env/server` in `github.ts` would break `node --test` for the whole module, and it
+would buy nothing: the token is optional by design (it only lifts a rate limit), there is
+nothing to validate beyond "string or absent", and it would drop the `GH_TOKEN` fallback.
+`process.env` is the right call here.
+
+**`@astrojs/markdown-satteri` is pinned to an exact version on purpose.** `astro.config.mjs`
+imports it directly, and Astro depends on it at an exact version too. A caret range here
+would install a second, nested copy the moment a new patch appeared, splitting the
+markdown pipeline across two versions. Dependabot is configured to ignore it — it moves
+when Astro moves, not before.
+
+**`src/data/activity-cache.json` is generated but committed.** It is the fallback when
+the GitHub API is unreachable, so the build succeeds with slightly stale numbers instead
+of failing. Do not gitignore it. It is `.prettierignore`d because the writer owns its
+formatting. The nightly `refresh-cache` job commits it back so it does not go stale;
+locally, `saveCache` skips byte-identical writes so an ordinary build does not dirty the
+working tree.
+
+**The CSP is real and it will block things.** `security.csp` in `astro.config.mjs` emits
+a per-page `<meta http-equiv>`, and `src/lib/csp-inline-scripts.mjs` adds hashes for the
+inline scripts at `astro:build:done` — Astro does not hash `is:inline` scripts itself.
+Consequences worth knowing:
+
+- Adding or editing an inline script is safe; the hash is recomputed from the shipped
+  bytes every build. Adding a **`<style>` element** is not — strict `style-src` will
+  refuse it. Put styles in `global.css` or a scoped `.astro` style block.
+- Shiki's per-token inline `style` attributes are allowed via `style-src-attr`, scoped to
+  the attribute channel only. Astro prints a generic "Shiki is incompatible with CSP"
+  warning at every build; it cannot see the override, so it is expected, not a problem.
+- `frame-ancestors` lives in `public/_headers`, not the meta policy, because meta
+  elements ignore it. The two policies compose.
+- `tests/e2e/csp.spec.ts` is what proves all of this. Do not skip it — a broken CSP
+  produces a green build and a silently broken site.
+
+**Visual snapshots are a local tool, not a CI gate.** `{platform}` resolves to `linux`
+both locally and on `ubuntu-latest`, so it separates macOS/Windows but not distro-level
+font rasterisation. Gating cross-machine pixel comparison would need a fixed container.
+Run `npm run test:visual` when changing CSS; the first run after adding a route writes
+the baseline and reports failure, and the next run compares against it.
+
+Snapshots mask every data-driven region (`.feed`, `.sparkline`, `.meta`, and the commit
+totals) because the homepage renders live GitHub data — unmasked, they would go red every
+time work happened. They also hide `.sheet__grain` / `.sheet__crumple`, whose noise
+dominates the PNG size and eats the diff budget without ever being the thing under review.
+
+## Known wart
+
+`/writing/` is listed in the sitemap while it carries `noindex` (which it does only while
+no post is published). Fixing it properly would mean re-implementing draft-frontmatter
+parsing inside `astro.config.mjs`, since the sitemap integration cannot reach
+`getCollection`. It resolves itself the moment a real post ships.

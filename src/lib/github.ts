@@ -90,23 +90,49 @@ type ApiCommit = {
   author: { login: string } | null;
 };
 
+const PER_PAGE = 100;
+const MAX_PAGES = 4;
+
+/**
+ * Every commit on the default branch, up to `MAX_PAGES * PER_PAGE` of them.
+ *
+ * Returns `null` for a failed fetch, distinct from `[]` for a repo that genuinely has
+ * no commits. Collapsing the two is how a rate-limited request used to read as an
+ * empty repo: the caller saw `length === 0` and quietly substituted cached data for a
+ * repo that was fine, or dropped a repo that was merely new.
+ */
 async function fetchAllCommits(
   repo: string,
-  maxPages = 4,
-): Promise<ApiCommit[]> {
+): Promise<{ commits: ApiCommit[]; truncated: boolean } | null> {
   const all: ApiCommit[] = [];
-  for (let page = 1; page <= maxPages; page++) {
+
+  for (let page = 1; page <= MAX_PAGES; page++) {
     const batch = await gh<ApiCommit[]>(
-      `/repos/${repo}/commits?per_page=100&page=${page}`,
+      `/repos/${repo}/commits?per_page=${PER_PAGE}&page=${page}`,
     );
-    if (!batch || batch.length === 0) break;
+    // A failure on any page, not just the first: a partial history would silently
+    // understate commitCount and move firstCommit forward, which is worse than
+    // falling back to a complete snapshot from the last good build.
+    if (!batch) return null;
     all.push(...batch);
-    if (batch.length < 100) break;
+    if (batch.length < PER_PAGE) return { commits: all, truncated: false };
   }
-  return all;
+
+  // Hit the page cap with a full final page, so there is almost certainly more. The
+  // derived numbers are now wrong in a way nothing downstream can detect — say so.
+  console.warn(
+    `[github] ${repo}: stopped at the ${MAX_PAGES * PER_PAGE}-commit page cap; ` +
+      `commitCount and firstCommit understate the real history. Raise MAX_PAGES.`,
+  );
+  return { commits: all, truncated: true };
 }
 
-function buildHistogram(dates: string[], now: number): number[] {
+/**
+ * Exported for tests. The bucket arithmetic is the one piece of this module with real
+ * off-by-one exposure and no visible failure mode — a wrong window silently draws a
+ * plausible-looking sparkline — so it is tested directly rather than through a build.
+ */
+export function buildHistogram(dates: string[], now: number): number[] {
   const buckets = new Array<number>(WEEKS).fill(0);
   for (const d of dates) {
     const age = now - new Date(d).getTime();
@@ -130,9 +156,18 @@ async function loadCache(): Promise<Record<string, RepoActivity>> {
 }
 
 async function saveCache(data: Record<string, RepoActivity>): Promise<void> {
+  const next = `${JSON.stringify(data, null, 2)}\n`;
   try {
+    // Skip a byte-identical write. The file is tracked, so an unconditional write
+    // leaves the working tree dirty after every single build — including `astro dev`
+    // starting up, and including builds that changed nothing. Two builds in the same
+    // week with no new commits produce identical content, so this is the common case.
+    // (Across a week boundary the histogram buckets shift and it rewrites, correctly.)
+    const current = await readFile(CACHE_PATH, "utf8").catch(() => null);
+    if (current === next) return;
+
     await mkdir(dirname(CACHE_PATH), { recursive: true });
-    await writeFile(CACHE_PATH, `${JSON.stringify(data, null, 2)}\n`);
+    await writeFile(CACHE_PATH, next);
   } catch (err) {
     console.warn(`[github] could not write cache: ${(err as Error).message}`);
   }
@@ -156,13 +191,14 @@ export async function getActivity(
   await Promise.all(
     repos.map(async (repo) => {
       const repoName = repo.split("/")[1] ?? repo;
-      const [meta, rawCommits] = await Promise.all([
+      const [meta, fetched] = await Promise.all([
         gh<ApiRepo>(`/repos/${repo}`),
         fetchAllCommits(repo),
       ]);
 
-      // Any failure on either call: keep whatever the last good build recorded.
-      if (!meta || rawCommits.length === 0) {
+      // Any failure on either call: keep whatever the last good build recorded. A repo
+      // with a real but empty commit list is not a failure and falls through.
+      if (!meta || !fetched) {
         const cached = cache[repo];
         if (cached) {
           console.warn(`[github] using cached data for ${repo}`);
@@ -171,7 +207,7 @@ export async function getActivity(
         return;
       }
 
-      const mine = rawCommits.filter(
+      const mine = fetched.commits.filter(
         (c) =>
           !c.author ||
           c.author.login.toLowerCase() === GITHUB_LOGIN.toLowerCase(),
@@ -209,6 +245,30 @@ export async function getActivity(
       };
     }),
   );
+
+  /*
+   * A repo that failed to fetch *and* has no cache entry is absent from `out`
+   * entirely. Downstream that is silent: `rankProjects` drops it, `ProjectCard` is
+   * never rendered for it, and the page builds and deploys a project short with a
+   * green check. The only signal was a `console.warn` in a log nobody reads.
+   *
+   * Locally that is the right behaviour — offline builds should still work. In CI it
+   * is not: a deploy is about to replace the live site, so an incomplete page has to
+   * stop the pipeline instead of shipping.
+   */
+  const missing = repos.filter((repo) => !out[repo]);
+  if (missing.length > 0) {
+    const detail = `no GitHub data and no cached fallback for: ${missing.join(", ")}`;
+    if (process.env.CI) {
+      throw new Error(
+        `[github] ${detail}. Refusing to build a deploy that would silently drop ` +
+          `a pinned project. Check the API status and the GITHUB_TOKEN secret.`,
+      );
+    }
+    console.warn(
+      `[github] ${detail} — those projects will be missing locally.`,
+    );
+  }
 
   // Only overwrite the cache with repos we actually refreshed.
   await saveCache({ ...cache, ...out });
