@@ -27,6 +27,24 @@ export function isExternal(href: string): boolean {
 }
 
 /**
+ * Rewrites root-relative `href`/`src` attributes in a fragment of HTML to absolute URLs.
+ *
+ * For content that leaves the site as markup rather than as a page: the RSS feed carries
+ * rendered posts, and a feed reader resolves `/writing/a-post/` against *its* origin, not
+ * ours, so every in-site link in a syndicated post would 404.
+ *
+ * Only root-relative paths are rewritten. Absolute URLs, protocol-relative URLs,
+ * fragments and `mailto:` targets are all left exactly as they are — the `(?!\/)` is what
+ * keeps `//cdn.example.com` from being mangled into the site's own origin.
+ */
+export function absolutiseHtml(html: string): string {
+  return html.replace(
+    /(<(?:a|img|source)\b[^>]*?\s(?:href|src|srcset)=")\/(?!\/)/g,
+    `$1${SITE.url}/`,
+  );
+}
+
+/**
  * The full attribute set for an anchor, href included — spread it as the only thing
  * an `<a>` needs to know about its destination:
  *

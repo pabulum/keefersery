@@ -12,7 +12,7 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { isExternal, linkAttrs } from "./links.ts";
+import { isExternal, linkAttrs, absolutiseHtml } from "./links.ts";
 
 describe("isExternal", () => {
   test("in-site paths and fragments are internal", () => {
@@ -120,5 +120,72 @@ describe("linkAttrs", () => {
     ]) {
       assert.equal(linkAttrs(href).href, href);
     }
+  });
+});
+
+describe("absolutiseHtml", () => {
+  test("rewrites root-relative hrefs to the canonical origin", () => {
+    assert.equal(
+      absolutiseHtml('<a href="/writing/a-post/">read</a>'),
+      '<a href="https://keefersery.com/writing/a-post/">read</a>',
+    );
+  });
+
+  test("rewrites img and source assets too", () => {
+    assert.equal(
+      absolutiseHtml('<img src="/diagram.png" alt="">'),
+      '<img src="https://keefersery.com/diagram.png" alt="">',
+    );
+    assert.equal(
+      absolutiseHtml('<source srcset="/wide.avif" type="image/avif">'),
+      '<source srcset="https://keefersery.com/wide.avif" type="image/avif">',
+    );
+  });
+
+  test("leaves already-absolute URLs alone", () => {
+    const html = '<a href="https://github.com/pabulum">repo</a>';
+    assert.equal(absolutiseHtml(html), html);
+  });
+
+  test("leaves protocol-relative URLs alone", () => {
+    // The case the negative lookahead exists for: `//cdn.example.com` starts with a
+    // slash but is already absolute, and rewriting it would point at this site instead.
+    const html = '<img src="//cdn.example.com/x.png" alt="">';
+    assert.equal(absolutiseHtml(html), html);
+  });
+
+  test("leaves fragments and handler schemes alone", () => {
+    const html =
+      '<a href="#main">skip</a><a href="mailto:me@keefersery.com">mail</a>';
+    assert.equal(absolutiseHtml(html), html);
+  });
+
+  test("rewrites every occurrence, not just the first", () => {
+    assert.equal(
+      absolutiseHtml('<a href="/a/">a</a> and <a href="/b/">b</a>'),
+      '<a href="https://keefersery.com/a/">a</a> and <a href="https://keefersery.com/b/">b</a>',
+    );
+  });
+
+  test("does not touch attributes on other elements", () => {
+    // Only the elements that actually fetch or navigate are rewritten. A `data-path`
+    // or a form action is not this function's business.
+    const html = '<div data-path="/not-a-link"></div>';
+    assert.equal(absolutiseHtml(html), html);
+  });
+
+  test("preserves attributes that precede the href", () => {
+    assert.equal(
+      absolutiseHtml('<a class="x" rel="me" href="/about/">about</a>'),
+      '<a class="x" rel="me" href="https://keefersery.com/about/">about</a>',
+    );
+  });
+
+  test("an empty or link-free fragment is returned unchanged", () => {
+    assert.equal(absolutiseHtml(""), "");
+    assert.equal(
+      absolutiseHtml("<p>no links here</p>"),
+      "<p>no links here</p>",
+    );
   });
 });

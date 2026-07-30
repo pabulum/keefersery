@@ -32,12 +32,13 @@ npm run verify:all   # the above plus the browser suite — what CI gates on
 Individually:
 
 ```bash
-npm run check         # astro check (types + template diagnostics)
-npm run format        # prettier --write
-npm test              # unit tests (node --test) — pure logic, no browser
-npm run test:e2e      # Playwright: CSP enforcement, layout, accessibility
-npm run test:visual   # Playwright: pixel baselines (local tool — see below)
-npm run test:budgets  # Lighthouse performance and accessibility budgets
+npm run check          # astro check (types + template diagnostics)
+npm run format         # prettier --write
+npm test               # unit tests (node --test) — pure logic, no browser
+npm run test:coverage  # the above, with coverage thresholds
+npm run test:e2e       # Playwright: CSP, layout, axe accessibility
+npm run test:visual    # Playwright: pixel baselines (local tool — see below)
+npm run test:budgets   # Lighthouse performance and accessibility budgets
 ```
 
 `npm run test:e2e`, `test:visual` and `test:budgets` all run against `dist/`, so build
@@ -56,6 +57,11 @@ Three layers, each covering what the others can't:
   correct-looking HTML, and a dead theme toggle in production, so nothing short of a
   real browser catches it. Also covers horizontal overflow at three viewports, colour
   contrast in both themes, and the skip link.
+- **Accessibility** (part of `test:e2e`) — a full axe pass at WCAG 2.2 AA on every route
+  in **both** colour schemes. Distinct from the Lighthouse score of 100, which is computed
+  from a weighted subset of these rules and counts an inapplicable rule as a pass. Contrast
+  is the rule most likely to regress and the only one whose result depends on the active
+  theme, so auditing one scheme would leave half the palette unchecked.
 - **Budgets** (`npm run test:budgets`) — per-page transfer ceilings and Lighthouse
   accessibility/SEO at 100. The JS and third-party budgets are currently pinned at zero,
   which is a tripwire for code arriving unintentionally rather than a ban — raise them in
@@ -102,12 +108,12 @@ Four workflows. `verify.yml` holds the actual checks and is never triggered dire
 both other entry points call it, so the gate on a PR and the gate on a deploy are the
 same job and can't drift.
 
-| Workflow     | Runs on                         | Does                                                            |
-| ------------ | ------------------------------- | --------------------------------------------------------------- |
-| `verify.yml` | called by the two below         | format, types, unit tests, build, browser suite, budgets        |
-| `pr.yml`     | pull requests                   | verify, then a Cloudflare preview deploy commented on the PR    |
-| `deploy.yml` | push to `main`, daily 06:00 UTC | verify, publish to Cloudflare Pages, refresh the activity cache |
-| `links.yml`  | Mondays 07:00 UTC               | checks every link in the built site; opens an issue on rot      |
+| Workflow     | Runs on                         | Does                                                             |
+| ------------ | ------------------------------- | ---------------------------------------------------------------- |
+| `verify.yml` | called by the two below         | actionlint, audit, format, types, tests, build, browser, budgets |
+| `pr.yml`     | pull requests                   | verify, then a Cloudflare preview deploy commented on the PR     |
+| `deploy.yml` | push to `main`, daily 06:00 UTC | verify, publish to Cloudflare Pages, refresh the activity cache  |
+| `links.yml`  | Mondays 07:00 UTC               | checks every link in the built site; opens an issue on rot       |
 
 `deploy.yml` publishes the **artifact** that `verify.yml` produced rather than
 rebuilding, so what ships is bit-for-bit what passed.

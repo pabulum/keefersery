@@ -33,17 +33,19 @@
 
 :root {
   /*
-   * Inter, self-hosted (see Base.astro), so every visitor gets the same setting
-   * rather than Helvetica-or-whatever-Windows-substitutes. Helvetica stays ahead of
-   * it for the small number of people who genuinely have it — the metrics are close
-   * enough that the grid does not shift.
+   * Inter, self-hosted, so every visitor gets the same setting rather than
+   * Helvetica-or-whatever-Windows-substitutes.
    *
-   * The file carries Inter's optical-size axis, so `font-optical-sizing: auto` below
-   * tightens the display sizes and opens up the small ones without a second family.
+   * The whole stack now comes from `--font-inter`, which Astro's font pipeline defines
+   * (see `fonts` in astro.config.mjs): the family itself, then the fallbacks, each with
+   * generated `size-adjust` and `ascent-override` metrics so the swap does not shift the
+   * grid. Listing the fallbacks again here would override those adjusted faces with the
+   * raw ones and reintroduce exactly the shift they exist to remove.
+   *
+   * The file behind it is Inter's `opsz` cut, so `font-optical-sizing: auto` below still
+   * tightens display sizes and opens up small ones without a second family.
    */
-  --font:
-    "Inter Variable", "Helvetica Neue", Helvetica, Inter, "Liberation Sans",
-    Arial, sans-serif;
+  --font: var(--font-inter);
   /* The one exception to a single family: code has to be monospaced to be correct. */
   --font-mono:
     ui-monospace, "SF Mono", "JetBrains Mono", "IBM Plex Mono", Menlo, Consolas,

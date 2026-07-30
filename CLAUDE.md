@@ -69,6 +69,46 @@ would install a second, nested copy the moment a new patch appeared, splitting t
 markdown pipeline across two versions. Dependabot is configured to ignore it — it moves
 when Astro moves, not before.
 
+**The font config names one exact file, and that is not an accident.** `fonts` in
+`astro.config.mjs` uses `fontProviders.local()` pointing at
+`@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2`. It looks like something
+that wants simplifying to a named provider. Both obvious simplifications are wrong, and
+both were measured:
+
+- `fontProviders.fontsource()` with `name: "Inter"` resolves to
+  `inter-latin-wght-normal.woff2` — verified byte-identical. That is the **weight-only**
+  variable font. It is 24kB smaller precisely because it has no optical-size axis, which
+  would make `font-optical-sizing: auto` in `global.css` silently do nothing. The page
+  still renders; the type just quietly gets worse.
+- `fontProviders.npm()` reading `opsz.css` keeps the axis but emits **all seven** subsets
+  and preloads every one — 348kB fetched eagerly, replacing the 73kB that unicode-range
+  fetched lazily. Worse than not doing this at all.
+
+Only the latin subset ships now. Text outside that range falls back to the system stack;
+add a variant if that stops being acceptable. The visual baselines are what proved the
+migration was pixel-identical, so re-run `npm run test:visual` if you touch this.
+
+**Icons are generated, never checked in.** `src/pages/icons/[size].png.ts` rasterises
+`public/favicon.svg` at build time with resvg (already a dependency, for OG cards). Do not
+add PNG files to `public/` — checked-in rasters are binaries that keep showing the old
+mark after someone edits the SVG. `ICON_SIZES` there, the `<link>` tags in `Base.astro`,
+and `site.webmanifest.ts` have to agree.
+
+**The `overrides` block exists to keep `npm audit` at zero, and CI gates on that.**
+`@lhci/cli` carries a deep transitive tree that pulled in 10 advisories — all of them
+reachable only from three leaf packages (`brace-expansion` DoS, `tmp` symlink/traversal,
+`uuid` buffer bounds). The overrides pin those three to patched majors. Notes:
+
+- `npm audit fix --force` wants to "fix" this by installing `@lhci/cli@0.1.0` — a
+  downgrade from 0.15 to 0.1. Never run it here.
+- The overrides are tree-wide, so they also apply to prettier, Astro and Playwright,
+  which share the same `brace-expansion`/`minimatch`/`glob` chain. All four suites plus a
+  full `lhci autorun` were verified against them before this landed. Re-verify if you
+  change them.
+- Dependabot will not bump an override. When `@lhci/cli` updates its own dependencies,
+  drop the corresponding entry and confirm `npm audit` is still clean — overrides are a
+  patch over someone else's lockfile, not a permanent fixture.
+
 **`src/data/activity-cache.json` is generated but committed.** It is the fallback when
 the GitHub API is unreachable, so the build succeeds with slightly stale numbers instead
 of failing. Do not gitignore it. It is `.prettierignore`d because the writer owns its
@@ -91,6 +131,12 @@ Consequences worth knowing:
   elements ignore it. The two policies compose.
 - `tests/e2e/csp.spec.ts` is what proves all of this. Do not skip it — a broken CSP
   produces a green build and a silently broken site.
+
+**Coverage thresholds are a ratchet, not a target.** `npm run test:coverage` gates at
+lines 70 / branches 90 / functions 75, a little under the current figures. The global line
+number is held down by `src/lib/github.ts`, most of which is network I/O that the real
+build exercises far better than a mocked `fetch` would. Raise the floor when the pure
+surface grows; do not chase it by mocking the API.
 
 **Visual snapshots are a local tool, not a CI gate.** `{platform}` resolves to `linux`
 both locally and on `ubuntu-latest`, so it separates macOS/Windows but not distro-level

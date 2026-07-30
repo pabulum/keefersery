@@ -22,6 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Workflows are the one part of this repo with no local feedback loop: a bad
+      # expression, a misspelled runner label or a wrong `needs` reference only shows up
+      # when a run fails, and for the scheduled ones that can be a day later.
+      #
+      # The official image rather than a third-party wrapper action, pinned rather than
+      # `latest`, and it bundles shellcheck so the `run:` blocks get linted too.
+      - name: Lint workflows
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: -color
+
       - uses: actions/setup-node@v4
         with:
           # Reads .nvmrc, so CI and local development cannot disagree about Node.
@@ -29,6 +40,18 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Every dependency here is build-time — the deployed site is plain HTML with no
+      # runtime dependencies at all — so a compromised package's payoff is injecting
+      # something into the generated output. That makes the whole tree worth auditing,
+      # not just `dependencies`.
+      #
+      # This is expected to stay at zero; see the `overrides` block in package.json. When
+      # a new advisory lands, the fix is an override pinning the patched transitive
+      # version. If one is genuinely unactionable, raise the level rather than deleting
+      # the step, so the gate keeps meaning something.
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
 
       # Cheap, deterministic checks first. A formatting or type error should not wait on
       # a browser download, OG image rendering, and the GitHub API.
@@ -38,8 +61,13 @@ jobs:
       - name: Types and templates
         run: npm run check
 
-      - name: Unit tests
-        run: npm test
+      # Coverage thresholds are a ratchet, not a target. They sit just under the current
+      # numbers so ordinary work does not trip them, while deleting a test does. The
+      # global line figure is held down by src/lib/github.ts, most of which is network
+      # I/O that the real build exercises far better than a mocked fetch would — raise
+      # the floor when the pure surface grows, not by mocking that.
+      - name: Unit tests and coverage
+        run: npm run test:coverage
 
       - name: Build
         run: npm run build

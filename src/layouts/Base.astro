@@ -2,11 +2,7 @@
 import { getNav } from "../data/nav";
 import { SITE } from "../data/site";
 import Link from "../components/Link.astro";
-// Inter, self-hosted and bundled at build time. The `opsz` cut carries Inter's
-// optical-size axis, so display sizes tighten and small sizes open up from one file
-// instead of two families. Subsets are unicode-ranged — an English page fetches latin
-// only, ~73kB.
-import "@fontsource-variable/inter/opsz.css";
+import { Font } from "astro:assets";
 import "../styles/global.css";
 
 type Props = {
@@ -134,8 +130,26 @@ const personSchema = {
     }
     {SITE.profiles.map((p) => <link rel="me" href={p.url} />)}
 
+    {
+      /* Emits the @font-face rules, the adjusted-metric fallback, and a preload link for
+         the one subset this page actually needs. Inter is the largest single asset on the
+         page, so discovering it from markup rather than from parsed CSS is the difference
+         that matters. Configured in astro.config.mjs — see the note there about `opsz`. */
+    }
+    <Font cssVariable="--font-inter" preload />
+
     <meta name="color-scheme" content="light dark" />
+
+    {
+      /* SVG first — current browsers take it and it is the only one that is the actual
+         source. The rest are rasterised from it at build time (src/pages/icons/) for the
+         places that cannot: iOS wants a 180 PNG and ignores SVG entirely, older Safari
+         and most feed readers want the 32. */
+    }
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/icons/180.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     {
       /* Applies a stored theme choice before first paint. This has to be inline and
