@@ -63,11 +63,21 @@ would buy nothing: the token is optional by design (it only lifts a rate limit),
 nothing to validate beyond "string or absent", and it would drop the `GH_TOKEN` fallback.
 `process.env` is the right call here.
 
-**`@astrojs/markdown-satteri` is pinned to an exact version on purpose.** `astro.config.mjs`
-imports it directly, and Astro depends on it at an exact version too. A caret range here
-would install a second, nested copy the moment a new patch appeared, splitting the
-markdown pipeline across two versions. Dependabot is configured to ignore it — it moves
-when Astro moves, not before.
+**`@astrojs/markdown-satteri` must be declared, and must resolve to one copy.**
+`astro.config.mjs` imports it directly, so it has to be a real dependency rather than
+something borrowed from Astro's hoisted tree. Astro also depends on it, at an exact
+version — and if our range ever resolves to a different one, npm hoists one copy and nests
+the other, so our config builds a processor from one version while Astro's internals
+expect another.
+
+This used to be handled by pinning our dependency to Astro's exact version and telling
+Dependabot to leave it alone. That was the wrong shape of fix: it only held while the two
+happened to match, it failed silently in _both_ directions, and the Dependabot ignore made
+lagging the likelier failure. `tests/dependencies.test.mjs` asserts the property directly
+instead, so the range is an ordinary caret Dependabot maintains and a split tree fails a
+build. Same file covers the equivalent zod constraint — scoped to Astro-side packages,
+because a `zod@3` nested under Puppeteer via `@lhci/cli` is correctly isolated and not
+something to force-dedupe.
 
 **The font config names one exact file, and that is not an accident.** `fonts` in
 `astro.config.mjs` uses `fontProviders.local()` pointing at

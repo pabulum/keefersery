@@ -16,12 +16,6 @@ updates:
       dev:
         dependency-type: development
     open-pull-requests-limit: 5
-    ignore:
-      # Astro pins this at an exact version and imports it internally; we declare it
-      # only because astro.config.mjs imports it directly (see CLAUDE.md). Bumping it
-      # independently installs a second, nested copy and the markdown pipeline splits
-      # across two versions. It moves when astro moves.
-      - dependency-name: "@astrojs/markdown-satteri"
 
   - package-ecosystem: github-actions
     directory: "/"
