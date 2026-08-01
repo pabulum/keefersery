@@ -315,8 +315,8 @@
       0,
       0,
       0,
-      18,
-      10
+      22,
+      6
     ]
   },
   "pabulum/vibelock": {
@@ -325,6 +325,16 @@
     "stars": 0,
     "language": "TypeScript",
     "commits": [
+      {
+        "sha": "4a31ba0c93eeb8f2bf1134aff0f01e5f8bf300bd",
+        "shortSha": "4a31ba0",
+        "message": "Some deadlock-api fixes for the matchmaking update",
+        "title": "Some deadlock-api fixes for the matchmaking update",
+        "date": "2026-07-31T21:34:18Z",
+        "url": "https://github.com/pabulum/vibelock/commit/4a31ba0c93eeb8f2bf1134aff0f01e5f8bf300bd",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
       {
         "sha": "f759e23f5050974d993c1479b9badecb2f42c01c",
         "shortSha": "f759e23",
@@ -1276,10 +1286,10 @@
         "repoName": "vibelock"
       }
     ],
-    "commitCount": 95,
-    "lastCommit": "2026-07-31T01:53:24Z",
+    "commitCount": 96,
+    "lastCommit": "2026-07-31T21:34:18Z",
     "firstCommit": "2026-06-15T18:44:39Z",
-    "recentCommitCount": 95,
+    "recentCommitCount": 96,
     "weeklyHistogram": [
       0,
       0,
@@ -1301,12 +1311,12 @@
       0,
       0,
       7,
-      21,
-      21,
-      9,
+      26,
       19,
-      11,
-      7
+      8,
+      23,
+      9,
+      4
     ]
   }
 }
