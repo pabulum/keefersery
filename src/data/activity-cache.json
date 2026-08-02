@@ -6,6 +6,16 @@
     "language": "JavaScript",
     "commits": [
       {
+        "sha": "44f1a5630753048a46343d79a190217c185bb8d9",
+        "shortSha": "44f1a56",
+        "message": "Season 2 clarifications from 7-31",
+        "title": "Season 2 clarifications from 7-31",
+        "date": "2026-08-01T18:06:45Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/44f1a5630753048a46343d79a190217c185bb8d9",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
         "sha": "cead5246ab98e03627e9c81b64ed4276efe55e38",
         "shortSha": "cead524",
         "message": "Add S2 rewards drawer",
@@ -286,10 +296,10 @@
         "repoName": "SlowYourRoll"
       }
     ],
-    "commitCount": 28,
-    "lastCommit": "2026-07-29T14:26:03Z",
+    "commitCount": 29,
+    "lastCommit": "2026-08-01T18:06:45Z",
     "firstCommit": "2026-07-20T13:30:56Z",
-    "recentCommitCount": 28,
+    "recentCommitCount": 29,
     "weeklyHistogram": [
       0,
       0,
@@ -316,7 +326,7 @@
       0,
       0,
       22,
-      6
+      7
     ]
   },
   "pabulum/vibelock": {
@@ -325,6 +335,16 @@
     "stars": 0,
     "language": "TypeScript",
     "commits": [
+      {
+        "sha": "546bfb0f46ce4e428a7f3b993ff0fa84d97d6d9e",
+        "shortSha": "546bfb0",
+        "message": "New patch boundary based on seasons",
+        "title": "New patch boundary based on seasons",
+        "date": "2026-08-01T19:57:36Z",
+        "url": "https://github.com/pabulum/vibelock/commit/546bfb0f46ce4e428a7f3b993ff0fa84d97d6d9e",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
       {
         "sha": "4a31ba0c93eeb8f2bf1134aff0f01e5f8bf300bd",
         "shortSha": "4a31ba0",
@@ -1286,10 +1306,10 @@
         "repoName": "vibelock"
       }
     ],
-    "commitCount": 96,
-    "lastCommit": "2026-07-31T21:34:18Z",
+    "commitCount": 97,
+    "lastCommit": "2026-08-01T19:57:36Z",
     "firstCommit": "2026-06-15T18:44:39Z",
-    "recentCommitCount": 96,
+    "recentCommitCount": 97,
     "weeklyHistogram": [
       0,
       0,
@@ -1310,13 +1330,13 @@
       0,
       0,
       0,
-      7,
+      8,
       26,
       19,
       8,
-      23,
-      9,
-      4
+      26,
+      5,
+      5
     ]
   }
 }
