@@ -325,8 +325,8 @@
       0,
       0,
       0,
-      22,
-      7
+      23,
+      6
     ]
   },
   "pabulum/vibelock": {
@@ -335,6 +335,36 @@
     "stars": 0,
     "language": "TypeScript",
     "commits": [
+      {
+        "sha": "e9468b683c6fed93ee1847b67842b073acd27679",
+        "shortSha": "e9468b6",
+        "message": "LP display, Match modal fixes",
+        "title": "LP display, Match modal fixes",
+        "date": "2026-08-03T01:10:44Z",
+        "url": "https://github.com/pabulum/vibelock/commit/e9468b683c6fed93ee1847b67842b073acd27679",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "a11143bbb815c24d79b4954839266cff076863ec",
+        "shortSha": "a11143b",
+        "message": "Endpoint migrations",
+        "title": "Endpoint migrations",
+        "date": "2026-08-03T00:21:04Z",
+        "url": "https://github.com/pabulum/vibelock/commit/a11143bbb815c24d79b4954839266cff076863ec",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "886224e719e294ad169b833c325ad55f43d2d8b8",
+        "shortSha": "886224e",
+        "message": "Rank fetching deprecation fixes",
+        "title": "Rank fetching deprecation fixes",
+        "date": "2026-08-02T23:55:28Z",
+        "url": "https://github.com/pabulum/vibelock/commit/886224e719e294ad169b833c325ad55f43d2d8b8",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
       {
         "sha": "546bfb0f46ce4e428a7f3b993ff0fa84d97d6d9e",
         "shortSha": "546bfb0",
@@ -1306,10 +1336,10 @@
         "repoName": "vibelock"
       }
     ],
-    "commitCount": 97,
-    "lastCommit": "2026-08-01T19:57:36Z",
+    "commitCount": 100,
+    "lastCommit": "2026-08-03T01:10:44Z",
     "firstCommit": "2026-06-15T18:44:39Z",
-    "recentCommitCount": 97,
+    "recentCommitCount": 100,
     "weeklyHistogram": [
       0,
       0,
@@ -1330,13 +1360,13 @@
       0,
       0,
       0,
-      8,
+      9,
       26,
-      19,
-      8,
-      26,
-      5,
-      5
+      18,
+      11,
+      24,
+      4,
+      8
     ]
   }
 }
