@@ -20,7 +20,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Workflows are the one part of this repo with no local feedback loop: a bad
       # expression, a misspelled runner label or a wrong `needs` reference only shows up
@@ -33,7 +33,7 @@ jobs:
         with:
           args: -color
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           # Reads .nvmrc, so CI and local development cannot disagree about Node.
           node-version-file: .nvmrc
@@ -95,7 +95,7 @@ jobs:
 
       - name: Upload failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: verify-diagnostics
           path: |
@@ -108,7 +108,7 @@ jobs:
       # Handing the built site to the caller means Deploy publishes the exact bytes that
       # passed above, rather than rebuilding and assuming the same output.
       - name: Upload site
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site
           path: dist/
@@ -118,7 +118,7 @@ jobs:
       # The build refreshes the committed API fallback. deploy.yml's refresh-cache job
       # commits this back on the nightly run — see that workflow for why.
       - name: Upload refreshed activity cache
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: activity-cache
           path: src/data/activity-cache.json
