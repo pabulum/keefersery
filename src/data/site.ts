@@ -45,6 +45,17 @@ export const SITE = {
     // { label: 'LinkedIn', url: 'https://www.linkedin.com/in/YOUR-SLUG/', handle: 'in/YOUR-SLUG' },
   ],
 
-  /** Repos the activity feed and project ranking pull from. */
-  repos: ["pabulum/vibelock", "pabulum/SlowYourRoll"],
+  /**
+   * Repos the activity feed and project ranking pull from.
+   *
+   * A superset of what `PROJECTS` names: a repo listed here shows up in the activity
+   * feed and the commit total whether or not it has a card, so work in progress is
+   * visible before there is anything worth writing an insight about.
+   */
+  repos: [
+    "pabulum/vibelock",
+    "pabulum/SlowYourRoll",
+    "pabulum/resiege",
+    "pabulum/zonematch",
+  ],
 } as const;

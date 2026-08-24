@@ -20,6 +20,19 @@ jobs:
   # the live domain.
   preview:
     needs: verify
+    # Dependabot pull requests read secrets from a separate Dependabot store rather than
+    # the Actions one, and that store is empty here — so `secrets: inherit` hands this job
+    # a blank CLOUDFLARE_API_TOKEN and wrangler exits with "necessary to set a
+    # CLOUDFLARE_API_TOKEN". Every Dependabot PR has failed this job since previews
+    # landed; it was only invisible while verify was failing first.
+    #
+    # Skipped rather than fixed by adding the token to the Dependabot store. That would
+    # work, and it would put a Pages-write credential inside a run whose entire purpose is
+    # installing the dependency under evaluation — the threat model this repo already
+    # audits its whole tree for. What it costs is visual review on bumps that really can
+    # change output (satori and resvg render the OG cards, Astro changes emitted HTML);
+    # `npm run test:visual` on the branch covers that when a bump warrants it.
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read

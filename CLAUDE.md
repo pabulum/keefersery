@@ -148,6 +148,55 @@ formatting. The nightly `refresh-cache` job commits it back so it does not go st
 locally, `saveCache` skips byte-identical writes so an ordinary build does not dirty the
 working tree.
 
+**A stalled build does not look stalled, and that is why there are two alarms.** Every
+relative date on the site — "last push today", "5d ago" in `ProjectCard.astro` — is
+resolved against `Date.now()` during the build and frozen into the HTML. A pipeline that
+stops running therefore does not degrade into something visibly broken; the page goes on
+asserting a freshness it lost, confidently, for as long as nobody looks. In Aug 2026 that
+ran for three weeks: `npm audit` picked up a new advisory in the `@lhci/cli` tree, verify
+went red, and because `deploy` and `refresh-cache` both `needs: verify`, the site and its
+committed fallback froze together on the same day.
+
+Note the shape of that trigger. `npm audit` is the only check in verify that can go from
+green to red with no change to this repo — the outside world decides when, and a build-time
+devDependency of the Lighthouse tooling has no bearing on the safety of the plain HTML that
+actually ships. Weigh that when a nightly is red and the diff is empty.
+
+Two alarms because they fail differently and neither subsumes the other:
+
+- `deploy.yml`'s `alarm` job opens one issue, kept pointed at the latest run, whenever any
+  job in Deploy fails. It catches the loud case the same morning. It cannot catch a Deploy
+  that reports success — an expired Cloudflare token, a publish against the wrong Pages
+  project — nor a schedule that never fires, which GitHub does after 60 days of repository
+  inactivity. Worth knowing that the `refresh-cache` bot commits were most of what kept
+  this repo "active", so a long enough stall is self-deepening.
+- `freshness.yml` fetches `/build.json` off the live domain and opens an issue when the
+  deployed build is over 36 hours old. It answers "are the bytes on the domain current",
+  which is the claim that actually failed, and it does not care why the answer is no.
+
+The 36h threshold alarms on the second consecutive missed night, not the first: GitHub's
+cron drifts by hours (observed Deploy starts range from 06:41 to 09:53), and an alarm that
+cries wolf at every delayed run gets filtered into the same silence it was built to break.
+`/build.json` is `no-store` in `public/_headers` — a cached copy would report a cached
+build date, which defeats the whole mechanism.
+
+**A red Dependabot PR usually is not about the dependency.** Two failure modes account
+for nearly all of them, and neither is a reason to distrust the bump:
+
+- `verify` red with an empty-looking diff is the `npm audit` gate above, on a branch that
+  predates whatever fixed it on `main`. `@dependabot rebase` clears it.
+- `preview` red is structural. Dependabot pull requests read secrets from a separate
+  Dependabot store rather than the Actions one, so `secrets: inherit` hands the job a
+  blank `CLOUDFLARE_API_TOKEN` and wrangler refuses. `pr.yml` skips the job for
+  `dependabot[bot]` rather than putting a Pages-write credential inside a run whose
+  purpose is installing the dependency being evaluated — see the comment there, including
+  what that costs.
+
+A third kind is real and worth reading closely: `npm ci` failing with `ERESOLVE` means the
+bump genuinely does not fit the tree. TypeScript 7 is the standing example — `@astrojs/check`
+caps its peer range at `^5 || ^6`, and no combination of published versions satisfies both,
+so that PR cannot go green until Astro ships a check that accepts it.
+
 **The CSP is real and it will block things.** `security.csp` in `astro.config.mjs` emits
 a per-page `<meta http-equiv>`, and `src/lib/csp-inline-scripts.mjs` adds hashes for the
 inline scripts at `astro:build:done` — Astro does not hash `is:inline` scripts itself.

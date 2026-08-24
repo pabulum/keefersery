@@ -13,7 +13,7 @@ import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import type { CollectionEntry } from "astro:content";
 
-import { buildFeed, rankProjects } from "./feed.ts";
+import { buildFeed, mergeActivity, rankProjects } from "./feed.ts";
 import type { Commit, RepoActivity } from "./github.ts";
 
 // --- fixtures ---------------------------------------------------------------
@@ -316,5 +316,100 @@ describe("rankProjects", () => {
       "me/b": activity("me/b", [commit("me/b", "2026-06-01T00:00:00Z")]),
     });
     assert.deepEqual(input, ["me/a", "me/b"]);
+  });
+});
+
+// --- mergeActivity ----------------------------------------------------------
+
+describe("mergeActivity", () => {
+  /** `activity()` leaves the histogram empty; these tests need real buckets. */
+  function withHistogram(a: RepoActivity, weeks: number[]): RepoActivity {
+    return { ...a, weeklyHistogram: weeks };
+  }
+
+  test("a single repo comes back as the very same object", () => {
+    // Every project but one names one repo, so the common path must not build a copy
+    // that could drift from what the API produced.
+    const only = activity("me/one", [commit("me/one", "2026-06-01T00:00:00Z")]);
+    assert.equal(mergeActivity(["me/one"], { "me/one": only }), only);
+  });
+
+  test("totals commits and spans the outermost dates", () => {
+    const merged = mergeActivity(["me/a", "me/b"], {
+      "me/a": activity("me/a", [
+        commit("me/a", "2026-01-01T00:00:00Z"),
+        commit("me/a", "2026-03-01T00:00:00Z"),
+      ]),
+      "me/b": activity("me/b", [commit("me/b", "2026-06-01T00:00:00Z")]),
+    });
+
+    assert.equal(merged?.commitCount, 3);
+    assert.equal(merged?.firstCommit, "2026-01-01T00:00:00Z");
+    assert.equal(merged?.lastCommit, "2026-06-01T00:00:00Z");
+  });
+
+  test("sums the sparkline bucket by bucket", () => {
+    // Safe only because every repo in a build is bucketed against the same `now`, so
+    // bucket i is the same calendar week in both. That is the property being pinned.
+    const merged = mergeActivity(["me/a", "me/b"], {
+      "me/a": withHistogram(
+        activity("me/a", [commit("me/a", "2026-01-01T00:00:00Z")]),
+        [1, 0, 2],
+      ),
+      "me/b": withHistogram(
+        activity("me/b", [commit("me/b", "2026-02-01T00:00:00Z")]),
+        [0, 5, 3],
+      ),
+    });
+
+    assert.deepEqual(merged?.weeklyHistogram, [1, 5, 5]);
+  });
+
+  test("orders the merged commits newest first", () => {
+    const merged = mergeActivity(["me/a", "me/b"], {
+      "me/a": activity("me/a", [commit("me/a", "2026-01-01T00:00:00Z")]),
+      "me/b": activity("me/b", [commit("me/b", "2026-06-01T00:00:00Z")]),
+    });
+
+    assert.deepEqual(
+      merged?.commits.map((c) => c.date),
+      ["2026-06-01T00:00:00Z", "2026-01-01T00:00:00Z"],
+    );
+  });
+
+  test("identity fields come from the primary rather than the merge", () => {
+    const primary = {
+      ...activity("me/a", [commit("me/a", "2026-01-01T00:00:00Z")]),
+      description: "the primary",
+      language: "Python",
+    };
+    const secondary = {
+      ...activity("me/b", [commit("me/b", "2026-06-01T00:00:00Z")]),
+      description: "the other one",
+      language: "Zig",
+    };
+
+    const merged = mergeActivity(["me/a", "me/b"], {
+      "me/a": primary,
+      "me/b": secondary,
+    });
+
+    assert.equal(merged?.repo, "me/a");
+    assert.equal(merged?.description, "the primary");
+    assert.equal(merged?.language, "Python");
+  });
+
+  test("a repo that failed to fetch is skipped, not counted as zero", () => {
+    // Same failure mode rankProjects handles: absent from the map entirely.
+    const merged = mergeActivity(["me/a", "me/missing"], {
+      "me/a": activity("me/a", [commit("me/a", "2026-01-01T00:00:00Z")]),
+    });
+
+    assert.equal(merged?.commitCount, 1);
+    assert.equal(merged?.repo, "me/a");
+  });
+
+  test("no data at all is undefined, so the card drops its meta line", () => {
+    assert.equal(mergeActivity(["me/a", "me/b"], {}), undefined);
   });
 });

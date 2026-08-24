@@ -87,16 +87,32 @@ rather than going red each time a commit lands.
 
 ## Editing content
 
-| What                                    | Where                      |
-| --------------------------------------- | -------------------------- |
-| Name, role, email, profile links        | `src/data/site.ts`         |
-| Project cards (tagline, insight, stack) | `src/data/projects.ts`     |
-| Homepage intro copy                     | `src/pages/index.astro`    |
-| Posts                                   | `src/content/writing/*.md` |
+| What                                        | Where                      |
+| ------------------------------------------- | -------------------------- |
+| Name, role, email, profile links, repo list | `src/data/site.ts`         |
+| Project cards (tagline, insight, stack)     | `src/data/projects.ts`     |
+| Homepage intro copy                         | `src/pages/index.astro`    |
+| Posts                                       | `src/content/writing/*.md` |
 
 New post: drop a markdown file in `src/content/writing/` with `title`, `description`,
 and `date` frontmatter. It appears in the feed, the writing index, and the RSS feed
 automatically. Set `draft: true` to keep it out of all three.
+
+**New repo, two levels.** Adding it to `repos` in `src/data/site.ts` is enough on its
+own: its commits join the activity feed and the commit total, and the sparkline, date
+range and ordering all derive themselves. A card on top of that needs an entry in
+`src/data/projects.ts`, where the only required prose is what a machine can't infer —
+what the thing is and why it was interesting.
+
+Nothing quantitative is ever typed in. If you find yourself writing a number into
+`src/data/`, it belongs in a derivation instead.
+
+Two shapes worth knowing. `repos` on a project is a **list**, primary first, because a
+project isn't always one repository — the card folds their commits, dates and sparkline
+together rather than reporting only the primary's. And `liveUrl` is **optional**: not
+everything here is a deployed web app, and a placeholder is worse than an omission,
+since `links.yml` checks every one of these weekly. Without it the title and the call to
+action fall back to the repository.
 
 `src/data/activity-cache.json` is generated and **committed on purpose** — if the
 GitHub API is unreachable or rate-limited, the build falls back to it and succeeds with
@@ -104,19 +120,28 @@ slightly stale numbers instead of failing. Don't add it to `.gitignore`.
 
 ## CI
 
-Four workflows. `verify.yml` holds the actual checks and is never triggered directly —
-both other entry points call it, so the gate on a PR and the gate on a deploy are the
+Five workflows. `verify.yml` holds the actual checks and is never triggered directly —
+both entry points call it, so the gate on a PR and the gate on a deploy are the
 same job and can't drift.
 
-| Workflow     | Runs on                         | Does                                                             |
-| ------------ | ------------------------------- | ---------------------------------------------------------------- |
-| `verify.yml` | called by the two below         | actionlint, audit, format, types, tests, build, browser, budgets |
-| `pr.yml`     | pull requests                   | verify, then a Cloudflare preview deploy commented on the PR     |
-| `deploy.yml` | push to `main`, daily 06:00 UTC | verify, publish to Cloudflare Pages, refresh the activity cache  |
-| `links.yml`  | Mondays 07:00 UTC               | checks every link in the built site; opens an issue on rot       |
+| Workflow        | Runs on                         | Does                                                              |
+| --------------- | ------------------------------- | ----------------------------------------------------------------- |
+| `verify.yml`    | called by `pr` and `deploy`     | actionlint, audit, format, types, tests, build, browser, budgets  |
+| `pr.yml`        | pull requests                   | verify, then a Cloudflare preview deploy commented on the PR      |
+| `deploy.yml`    | push to `main`, daily 06:00 UTC | verify, publish to Cloudflare Pages, refresh the activity cache   |
+| `links.yml`     | Mondays 07:00 UTC               | checks every link in the built site; opens an issue on rot        |
+| `freshness.yml` | daily 08:00 UTC                 | fetches `/build.json` from the live site; opens an issue if stale |
 
 `deploy.yml` publishes the **artifact** that `verify.yml` produced rather than
 rebuilding, so what ships is bit-for-bit what passed.
+
+Both scheduled jobs report by **opening an issue**, not by going red. A failing cron on a
+repo nobody is watching is not a notification — this site once served a three-week-old
+build without anyone noticing, because relative dates are baked at build time and a stale
+page goes on claiming "last push today". `deploy.yml` alarms when a job fails;
+`freshness.yml` is the backstop for the failures a job-level alarm can't see, where Deploy
+is green or never ran and the domain is stale anyway. Each keeps one issue open at a time
+and closes it once the condition clears. See CLAUDE.md for the thresholds and why.
 
 ### Secrets
 

@@ -13,10 +13,23 @@
 export type Project = {
   /** Display name. */
   name: string;
-  /** owner/repo on GitHub. */
-  repo: string;
-  /** Deployed, clickable instance. */
-  liveUrl: string;
+  /**
+   * The owner/repo it is built in, primary first.
+   *
+   * A list rather than a string because a project is not always one repository —
+   * Resiege ships as two, split by who installs which half. The card folds their
+   * activity together (see `mergeActivity`) rather than naming one and quietly
+   * reporting only its numbers, which would understate the work in exactly the way
+   * this file is not allowed to.
+   */
+  repos: [string, ...string[]];
+  /**
+   * Deployed, clickable instance. Optional: not everything here is a web app, and a
+   * placeholder URL is worse than none — links.yml checks every one of these weekly,
+   * so a made-up link becomes a link-rot issue rather than a missing feature. Without
+   * one the card's title and its call to action fall back to the repository.
+   */
+  liveUrl?: string;
   /** One line: what it is, for whom. */
   tagline: string;
   /** The non-obvious problem and how it was solved. Two or three sentences, max. */
@@ -30,7 +43,7 @@ export type Project = {
 export const PROJECTS: Project[] = [
   {
     name: "Vibelock",
-    repo: "pabulum/vibelock",
+    repos: ["pabulum/vibelock"],
     liveUrl: "https://pabulum.github.io/vibelock/",
     tagline: "Item builds for Deadlock, generated from live match data.",
     insight:
@@ -40,7 +53,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Slow Your Roll",
-    repo: "pabulum/SlowYourRoll",
+    repos: ["pabulum/SlowYourRoll"],
     liveUrl: "https://pabulum.github.io/SlowYourRoll/",
     tagline: "Expected-value tracker for World of Warcraft bonus rolls.",
     insight:
@@ -51,6 +64,19 @@ export const PROJECTS: Project[] = [
       "Zero-build static",
       "Node test runner",
     ],
+    pinned: true,
+  },
+  {
+    name: "Resiege",
+    // Two repos, one project. The split is by who installs which half — resiege is what
+    // a player installs, zonematch is what a server operator runs — which is a packaging
+    // decision, not two pieces of work, so it reads as one card.
+    repos: ["pabulum/resiege", "pabulum/zonematch"],
+    tagline:
+      "Quality-of-life patches and a revived multiplayer lobby for Dungeon Siege (2002).",
+    insight:
+      "Reviving a dead game usually stalls on its matchmaking server, but Dungeon Siege never hardcoded one: gun_server is a plain INI setting, so pointing a client at a self-hosted lobby is an edit rather than a binary patch or a DNS hijack. The harder half is that ZoneMatch was only ever *discovery* — it hands out addresses and play then runs peer-to-peer over DirectPlay 8, so a faithful revival yields a browsable game list full of games nobody behind NAT can join, and one that is safe to run in 2026 has to relay rather than hand a player's address to another player. The content half rewrites the game's own tank archives directly from Linux, with no Siege Editor and no Windows toolchain, mostly to surface things the game already ships and never offers you.",
+    stack: ["Python", "Zig", "x86 assembly", "DirectPlay 8", "Wine/Proton"],
     pinned: true,
   },
 ];

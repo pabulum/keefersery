@@ -5,20 +5,29 @@ import Feed from "../components/Feed.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { PINNED } from "../data/projects";
 import { SITE } from "../data/site";
-import { getActivity } from "../lib/github";
-import { buildFeed, rankProjects } from "../lib/feed";
+import { getActivity, type RepoActivity } from "../lib/github";
+import { buildFeed, mergeActivity, rankProjects } from "../lib/feed";
 import Link from "../components/Link.astro";
 
 const activity = await getActivity([...SITE.repos]);
 const posts = await getCollection("writing");
 
+// A card can cover more than one repo, so activity is folded per project before
+// anything ranks or renders it — keyed by the primary repo, which is what identifies
+// the project everywhere below.
+const projectActivity: Record<string, RepoActivity> = {};
+for (const project of PINNED) {
+  const merged = mergeActivity(project.repos, activity);
+  if (merged) projectActivity[project.repos[0]] = merged;
+}
+
 // Ranked by most-recent push, so the list reorders itself as work moves around.
 const order = rankProjects(
-  PINNED.map((p) => p.repo),
-  activity,
+  PINNED.map((p) => p.repos[0]),
+  projectActivity,
 );
 const ranked = order
-  .map((repo) => PINNED.find((p) => p.repo === repo))
+  .map((repo) => PINNED.find((p) => p.repos[0] === repo))
   .filter((p): p is (typeof PINNED)[number] => Boolean(p));
 
 // Eight is enough to show cadence without the page becoming a commit log.
@@ -74,7 +83,7 @@ const lastPush = Object.values(activity)
         ranked.map((project, i) => (
           <ProjectCard
             project={project}
-            activity={activity[project.repo]}
+            activity={projectActivity[project.repos[0]]}
             index={i + 1}
           />
         ))

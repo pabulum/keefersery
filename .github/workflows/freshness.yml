@@ -1,0 +1,144 @@
+name: Freshness
+
+# Asks the only question that actually matters — is what the domain is serving current —
+# and does not care why the answer is no.
+#
+# deploy.yml now opens an issue when it fails, which covers the loud case. This covers
+# every quiet one that a job-level alarm structurally cannot see: a Cloudflare token that
+# expired so `pages deploy` succeeds against nothing, a publish that lands on the wrong
+# project, GitHub disabling the schedule after 60 days of repository inactivity, or the
+# cron simply never firing. In all of those the Deploy workflow is green or absent, and
+# the site is stale anyway.
+#
+# It probes the live domain rather than inspecting the last run, because "the workflow
+# reported success" and "the bytes on the domain are current" are different claims and it
+# was the second one that failed.
+
+on:
+  schedule:
+    # Deploy is scheduled for 06:00 UTC but GitHub's cron drifts hard — observed starts
+    # range from 06:41 to 09:53. 08:00 is not a guarantee of running after that day's
+    # deploy, and does not need to be: see the staleness threshold below.
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: freshness
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Read the deployed build date
+        id: probe
+        env:
+          URL: https://keefersery.com/build.json
+          # One missed night leaves the build ~26h old at the next probe; two leaves it
+          # ~50h. 36h therefore alarms on the second consecutive miss, not the first.
+          # That is deliberate. The loud failure already raises an issue the same morning
+          # via deploy.yml, so this path exists for silence — and a threshold that fires
+          # on a single delayed cron would spend its credibility on transients until
+          # nobody read it, which is precisely the failure being fixed.
+          MAX_AGE_HOURS: "36"
+        run: |
+          set -euo pipefail
+
+          if ! body="$(curl -sSfL --max-time 30 -H 'Cache-Control: no-cache' "${URL}")"; then
+            {
+              echo "stale=true"
+              echo "detail=\`${URL}\` could not be fetched. The site may be down, or the deploy may predate this endpoint."
+            } >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          built_at="$(printf '%s' "${body}" | jq -r '.builtAt // empty')"
+          if [ -z "${built_at}" ]; then
+            {
+              echo "stale=true"
+              echo "detail=\`${URL}\` returned no \`builtAt\` field. Served body: \`${body}\`"
+            } >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          age_hours="$(( ( $(date -u +%s) - $(date -u -d "${built_at}" +%s) ) / 3600 ))"
+          echo "The deployed build is ${age_hours}h old (built ${built_at})."
+
+          if [ "${age_hours}" -gt "${MAX_AGE_HOURS}" ]; then
+            {
+              echo "stale=true"
+              echo "detail=The deployed build is **${age_hours}h old** (built \`${built_at}\`), past the ${MAX_AGE_HOURS}h threshold."
+            } >> "${GITHUB_OUTPUT}"
+          else
+            echo "stale=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Open or close the staleness issue
+        uses: actions/github-script@v7
+        env:
+          STALE: ${{ steps.probe.outputs.stale }}
+          DETAIL: ${{ steps.probe.outputs.detail }}
+        with:
+          script: |
+            const stale = process.env.STALE === 'true';
+
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'stale-deploy',
+            });
+
+            if (!stale) {
+              for (const issue of open) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: 'The deployed build is current again. Closing.',
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+              return;
+            }
+
+            const body = [
+              process.env.DETAIL,
+              '',
+              'Every relative date on the site — "last push today", "5d ago" — is resolved',
+              'at build time, so a stalled pipeline does not look stale: the page keeps',
+              'asserting freshness it no longer has.',
+              '',
+              'Check the Deploy workflow first. If it is green, the break is between a',
+              'successful build and the bytes on the domain — Cloudflare credentials and',
+              'the Pages project name are the usual suspects.',
+            ].join('\n');
+
+            // Rewrite the open issue rather than commenting on it. This condition
+            // persists until someone acts, and a daily comment on a three-week outage is
+            // the same silence with more noise in it.
+            if (open.length) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: open[0].number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'keefersery.com is serving a stale build',
+                body,
+                labels: ['stale-deploy'],
+              });
+            }

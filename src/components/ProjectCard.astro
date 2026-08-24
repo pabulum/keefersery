@@ -13,7 +13,16 @@ type Props = {
 
 const { project, activity, index } = Astro.props;
 
-const repoUrl = `https://github.com/${project.repo}`;
+const repoUrls = project.repos.map(
+  (repo) => `https://github.com/${repo}` as const,
+);
+
+/**
+ * Where the heading points. A deployed instance wins when there is one — it is the
+ * thing a reader can actually try — and the primary repo stands in when there is not,
+ * rather than leaving the only title on the page unclickable.
+ */
+const primaryUrl = project.liveUrl ?? repoUrls[0]!;
 
 /**
  * The insight strings carry *emphasis* markers, but they're plain TS strings and never
@@ -51,7 +60,7 @@ const relative = (iso: string) => {
 
   <div>
     <h3 class="project__name">
-      <Link href={project.liveUrl}>{project.name}</Link>
+      <Link href={primaryUrl}>{project.name}</Link>
     </h3>
 
     <p class="project__tagline">{project.tagline}</p>
@@ -83,8 +92,18 @@ const relative = (iso: string) => {
         /* No literal arrow — Link already appends the new-tab indicator, and two
           glyphs saying "this goes somewhere" is one too many. */
       }
-      <Link href={project.liveUrl}>Open the app</Link>
-      <Link href={repoUrl}>Source</Link>
+      {project.liveUrl && <Link href={project.liveUrl}>Open the app</Link>}
+      {
+        /* One repo gets the generic word; several get their own names, because "Source"
+          twice over says nothing about which half a reader is opening. */
+        repoUrls.length === 1 ? (
+          <Link href={repoUrls[0]!}>Source</Link>
+        ) : (
+          repoUrls.map((url, i) => (
+            <Link href={url}>{project.repos[i]!.split("/")[1]}</Link>
+          ))
+        )
+      }
       {
         activity?.firstCommit && activity.lastCommit && (
           <span class="section__aside data">

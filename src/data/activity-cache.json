@@ -1528,5 +1528,105 @@
       0,
       1
     ]
+  },
+  "pabulum/resiege": {
+    "repo": "pabulum/resiege",
+    "description": "All-in-one enhancement and quality of life mod for the original Dungeon Siege",
+    "stars": 0,
+    "language": "Python",
+    "commits": [
+      {
+        "sha": "cf73c487affc791996478f23feb96299786b1ca8",
+        "shortSha": "cf73c48",
+        "message": "Resiege: quality-of-life and content patches for Dungeon Siege (2002)\n\nBuilt and run on Linux, against the Windows game under Wine/Proton, with no\nSiege Editor and no Windows toolchain required. The tools read and rewrite the\ngame's own .dsres/.dsmap tank archives directly. No game assets are included\nor redistributed.\n\nWhat it adds, in short: companions in multiplayer on both maps, recruitable\nconscripts, host-authoritative monster variation across ~9,100 placed actors,\nfive more playable models, 113 monster spells and 62 gated equipment templates\nopened and priced with the game's own formulas, a coherent draw-distance\ncontrol, camera sliders in the game's own options menu via a FuBi plugin DLL,\nrender resolution, and a 2002 hardware database taught about modern GPUs.\n\nEverything is auditable by construction: exe patches ship as annotated\nassembly with a --verify-asm that disassembles them, and the one compiled\nartifact is committed next to its source with a reproducible build that diffs\nagainst the committed bytes.\n\nThe self-hosted ZoneMatch half -- lobby, MOTD, DirectPlay, proxy DLL -- lives\nin a companion repo. The split is by who installs it: this is what a player\ninstalls.\n\nThis is a fresh root. The pre-split history carried hardcoded personal install\npaths in its blobs and is deliberately not carried forward.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>",
+        "title": "Resiege: quality-of-life and content patches for Dungeon Siege (2002)",
+        "date": "2026-08-24T21:38:23Z",
+        "url": "https://github.com/pabulum/resiege/commit/cf73c487affc791996478f23feb96299786b1ca8",
+        "repo": "pabulum/resiege",
+        "repoName": "resiege"
+      }
+    ],
+    "commitCount": 1,
+    "lastCommit": "2026-08-24T21:38:23Z",
+    "firstCommit": "2026-08-24T21:38:23Z",
+    "recentCommitCount": 1,
+    "weeklyHistogram": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  },
+  "pabulum/zonematch": {
+    "repo": "pabulum/zonematch",
+    "description": "A fresh way to host ZoneMatch lobbies for the original Dungeon Siege",
+    "stars": 0,
+    "language": "Python",
+    "commits": [
+      {
+        "sha": "b4ca0980fab03add79631f308bc3cbc8c172d967",
+        "shortSha": "b4ca098",
+        "message": "ZoneMatch: a self-hosted replacement for Dungeon Siege's matchmaking\n\nMicrosoft shut ZoneMatch down years ago, which is why the original Dungeon\nSiege's multiplayer UI looks broken. The endpoint was never hardcoded -- it is\na plain-text INI setting -- so pointing a retail client at a server you run\ntakes an INI edit, no binary patch and no DNS hijack.\n\nThree legs. News/MOTD is plain HTTP and works. The GUN lobby is TCP 2300,\ncustom binary framing around XML, and works: two headless clients host games,\na third browses and finds them. AutoUpdate is stubbed.\n\nThe DirectPlay 8 session layer follows Microsoft's published [MC-DPL8CS]\nspecification, checked against real capture bytes by dp_dpl8cs.selftest().\nThe GUN protocol was reconstructed by observing a retail client talk to\nsoftware on the same machine, for interoperability. RC4, the CryptoAPI blob\nformats and the GUN framing are implemented here against published vectors;\nRSA is the one thing delegated to a library, because it is not something to\nhand-roll for a service other people connect to.\n\nCredentials are protected by default rather than by remembering to. This\nserver holds the private half of the handshake, so it is the first place a\nplayer's CD key and password have existed in plaintext since they typed them.\ntools/confidential.py masks them behind a sha256 handle unless --show-secrets\nis passed, and writes captures 0600 into a 0700 directory rather than\ninheriting the operator's umask. The captures directory is never committed.\n\nStill open, and stated in the README as a decision rather than discovered\nlater: the lobby is currently faithful to 2002 and hands out IpAddr/Ip2. A\npublic deployment must relay instead. See \"Design principles\".\n\nThe content and modding half is a separate repo, resiege. The split is by who\ninstalls it: this is what runs on a machine other people connect to.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>",
+        "title": "ZoneMatch: a self-hosted replacement for Dungeon Siege's matchmaking",
+        "date": "2026-08-24T22:21:58Z",
+        "url": "https://github.com/pabulum/zonematch/commit/b4ca0980fab03add79631f308bc3cbc8c172d967",
+        "repo": "pabulum/zonematch",
+        "repoName": "zonematch"
+      }
+    ],
+    "commitCount": 1,
+    "lastCommit": "2026-08-24T22:21:58Z",
+    "firstCommit": "2026-08-24T22:21:58Z",
+    "recentCommitCount": 1,
+    "weeklyHistogram": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
   }
 }

@@ -90,6 +90,59 @@ export function buildFeed(
 }
 
 /**
+ * Fold several repos' activity into one, for a project that ships as more than one
+ * repository.
+ *
+ * The rejected alternative was letting such a card name a primary repo and report only
+ * that repo's numbers. It reads fine and is wrong: the commit count, the date range and
+ * the sparkline would all understate work that the card itself claims. Deriving the
+ * total is the only version that keeps `src/data` free of numbers.
+ *
+ * Histograms sum element-wise because every repo in a build is bucketed against the same
+ * `now` (see `buildHistogram`), so bucket i covers the same week in all of them. That
+ * stops being true if repos are ever fetched across a week boundary in one build, which
+ * `getActivity` does not do.
+ *
+ * Identity fields — repo, description, language — come from the primary rather than
+ * being merged: they name one repository and there is no honest way to average them.
+ */
+export function mergeActivity(
+  repos: readonly string[],
+  activity: Record<string, RepoActivity>,
+): RepoActivity | undefined {
+  const parts = repos
+    .map((repo) => activity[repo])
+    .filter((a): a is RepoActivity => Boolean(a));
+
+  // One repo is the common case and must stay referentially identical, so a single-repo
+  // project renders from exactly the object the API produced.
+  if (parts.length <= 1) return parts[0];
+
+  const bounds = parts
+    .flatMap((p) => [p.firstCommit, p.lastCommit])
+    .filter((d): d is string => Boolean(d))
+    .sort();
+
+  const sum = (pick: (a: RepoActivity) => number) =>
+    parts.reduce((n, p) => n + pick(p), 0);
+
+  return {
+    ...parts[0]!,
+    commits: parts
+      .flatMap((p) => p.commits)
+      .sort((a, b) => +new Date(b.date) - +new Date(a.date)),
+    commitCount: sum((p) => p.commitCount),
+    stars: sum((p) => p.stars),
+    recentCommitCount: sum((p) => p.recentCommitCount),
+    firstCommit: bounds[0] ?? null,
+    lastCommit: bounds.at(-1) ?? null,
+    weeklyHistogram: parts[0]!.weeklyHistogram.map((_, i) =>
+      sum((p) => p.weeklyHistogram[i] ?? 0),
+    ),
+  };
+}
+
+/**
  * Rank for the pinned-projects list. Recency dominates, because the question a
  * reader is really asking is "is this alive," not "which is biggest." Total commits
  * only breaks ties between projects touched around the same time.

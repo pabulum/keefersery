@@ -48,3 +48,10 @@
 # Feed readers poll these; an hour is a reasonable floor between fetches.
 /rss.xml
   Cache-Control: public, max-age=3600
+
+# The freshness probe reads this to decide whether the deployed site has gone stale, so a
+# cached copy would defeat the entire point — an edge still holding last week's build.json
+# reports last week's build date. Uncacheable rather than short-lived: nothing polls it
+# but one cron a day, so there is no load to spare.
+/build.json
+  Cache-Control: no-store
