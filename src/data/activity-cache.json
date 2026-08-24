@@ -6,6 +6,76 @@
     "language": "JavaScript",
     "commits": [
       {
+        "sha": "1156e59ec24204639bf1e38294c6802e42ebbbce",
+        "shortSha": "1156e59",
+        "message": "Flexible crest savings",
+        "title": "Flexible crest savings",
+        "date": "2026-08-17T20:55:59Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/1156e59ec24204639bf1e38294c6802e42ebbbce",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "b8467078e8529e0d0a48a4ea1beedd5dac314171",
+        "shortSha": "b846707",
+        "message": "Emphasize crest savings",
+        "title": "Emphasize crest savings",
+        "date": "2026-08-17T18:32:43Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/b8467078e8529e0d0a48a4ea1beedd5dac314171",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "059f27cdf25a79ab83a47c47d926d673c4e8f907",
+        "shortSha": "059f27c",
+        "message": "De-dupe token & piece",
+        "title": "De-dupe token & piece",
+        "date": "2026-08-17T14:54:27Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/059f27cdf25a79ab83a47c47d926d673c4e8f907",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "da74e380d00f15a58f7b364ffdac734a451a604d",
+        "shortSha": "da74e38",
+        "message": "Filter out cosmetic items, token",
+        "title": "Filter out cosmetic items, token",
+        "date": "2026-08-17T13:18:59Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/da74e380d00f15a58f7b364ffdac734a451a604d",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "4710d2b4a6b559e8791d53fdeb3e06a1b16ec7bb",
+        "shortSha": "4710d2b",
+        "message": "Fixes after QELive Upgrade Finder release",
+        "title": "Fixes after QELive Upgrade Finder release",
+        "date": "2026-08-17T02:03:13Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/4710d2b4a6b559e8791d53fdeb3e06a1b16ec7bb",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "6ba1f370cd787189ff524fadad0bfef1c83bf061",
+        "shortSha": "6ba1f37",
+        "message": "Season 2 fixes & recommendations",
+        "title": "Season 2 fixes & recommendations",
+        "date": "2026-08-11T22:03:55Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/6ba1f370cd787189ff524fadad0bfef1c83bf061",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
+        "sha": "f34c27baed6bedd6a06eba4e420baa6de818f8fa",
+        "shortSha": "f34c27b",
+        "message": "Updates from Larias' guide",
+        "title": "Updates from Larias' guide",
+        "date": "2026-08-07T19:38:43Z",
+        "url": "https://github.com/pabulum/SlowYourRoll/commit/f34c27baed6bedd6a06eba4e420baa6de818f8fa",
+        "repo": "pabulum/SlowYourRoll",
+        "repoName": "SlowYourRoll"
+      },
+      {
         "sha": "44f1a5630753048a46343d79a190217c185bb8d9",
         "shortSha": "44f1a56",
         "message": "Season 2 clarifications from 7-31",
@@ -296,10 +366,10 @@
         "repoName": "SlowYourRoll"
       }
     ],
-    "commitCount": 29,
-    "lastCommit": "2026-08-01T18:06:45Z",
+    "commitCount": 36,
+    "lastCommit": "2026-08-17T20:55:59Z",
     "firstCommit": "2026-07-20T13:30:56Z",
-    "recentCommitCount": 29,
+    "recentCommitCount": 36,
     "weeklyHistogram": [
       0,
       0,
@@ -321,12 +391,12 @@
       0,
       0,
       0,
-      0,
-      0,
-      0,
-      0,
+      2,
       23,
-      6
+      4,
+      1,
+      6,
+      0
     ]
   },
   "pabulum/vibelock": {
@@ -335,6 +405,96 @@
     "stars": 0,
     "language": "TypeScript",
     "commits": [
+      {
+        "sha": "1b80d48aca0055fb58457e736be8238eb6b67880",
+        "shortSha": "1b80d48",
+        "message": "Switch to Biome for linting & formatting",
+        "title": "Switch to Biome for linting & formatting",
+        "date": "2026-08-19T21:40:10Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1b80d48aca0055fb58457e736be8238eb6b67880",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "a9b47237a6685f46042c08f48bb42b9269f171cb",
+        "shortSha": "a9b4723",
+        "message": "Bans",
+        "title": "Bans",
+        "date": "2026-08-05T17:46:09Z",
+        "url": "https://github.com/pabulum/vibelock/commit/a9b47237a6685f46042c08f48bb42b9269f171cb",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "49f815f0d08c2ae5f58b13e77bddd058cbf5d171",
+        "shortSha": "49f815f",
+        "message": "Replace builds when exported; smoother export; hero swap recommendations",
+        "title": "Replace builds when exported; smoother export; hero swap recommendations",
+        "date": "2026-08-05T16:51:02Z",
+        "url": "https://github.com/pabulum/vibelock/commit/49f815f0d08c2ae5f58b13e77bddd058cbf5d171",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "71257f3d4dabc3e769558cc07d9075a7395a5bdc",
+        "shortSha": "71257f3",
+        "message": "Prevent dependencies from being optimized during tests",
+        "title": "Prevent dependencies from being optimized during tests",
+        "date": "2026-08-05T15:16:11Z",
+        "url": "https://github.com/pabulum/vibelock/commit/71257f3d4dabc3e769558cc07d9075a7395a5bdc",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "fe9c5dcb1a70dfd0b6377c4402adc9dd9e4627b5",
+        "shortSha": "fe9c5dc",
+        "message": "Copy updates",
+        "title": "Copy updates",
+        "date": "2026-08-05T02:07:12Z",
+        "url": "https://github.com/pabulum/vibelock/commit/fe9c5dcb1a70dfd0b6377c4402adc9dd9e4627b5",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "88273bf9c3244c4104d1af9fb2ef2bf2d513f622",
+        "shortSha": "88273bf",
+        "message": "Soul pace chart; death map",
+        "title": "Soul pace chart; death map",
+        "date": "2026-08-04T22:00:49Z",
+        "url": "https://github.com/pabulum/vibelock/commit/88273bf9c3244c4104d1af9fb2ef2bf2d513f622",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "3361ab2a77a1644571600d28eff061a59823f188",
+        "shortSha": "3361ab2",
+        "message": "Fake obscurus fix; soul pace; lane matchups; sessions; more convenient build writes",
+        "title": "Fake obscurus fix; soul pace; lane matchups; sessions; more convenient build writes",
+        "date": "2026-08-03T23:38:31Z",
+        "url": "https://github.com/pabulum/vibelock/commit/3361ab2a77a1644571600d28eff061a59823f188",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "1bb50f383c0dc54e805f7c040feef07091de4b31",
+        "shortSha": "1bb50f3",
+        "message": "Contrast accessibility fixes; crash resilience; live API contract; bundle budget; lighthouse; lychee; CI/lint gaps; mobile layout legibility; test coverage for Match modal",
+        "title": "Contrast accessibility fixes; crash resilience; live API contract; bundle budget; lighthouse; lychee; CI/lint gaps; mobile layout legibility; test coverage for Match modal",
+        "date": "2026-08-03T20:25:12Z",
+        "url": "https://github.com/pabulum/vibelock/commit/1bb50f383c0dc54e805f7c040feef07091de4b31",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
+      {
+        "sha": "65115b1150331f439c0b92064bf0242f6eceae5f",
+        "shortSha": "65115b1",
+        "message": "Harvest fixes & API bug workaround; ensure we're using ranked (not standard) where relevant",
+        "title": "Harvest fixes & API bug workaround; ensure we're using ranked (not standard) where relevant",
+        "date": "2026-08-03T16:21:57Z",
+        "url": "https://github.com/pabulum/vibelock/commit/65115b1150331f439c0b92064bf0242f6eceae5f",
+        "repo": "pabulum/vibelock",
+        "repoName": "vibelock"
+      },
       {
         "sha": "e9468b683c6fed93ee1847b67842b073acd27679",
         "shortSha": "e9468b6",
@@ -1336,10 +1496,10 @@
         "repoName": "vibelock"
       }
     ],
-    "commitCount": 100,
-    "lastCommit": "2026-08-03T01:10:44Z",
+    "commitCount": 109,
+    "lastCommit": "2026-08-19T21:40:10Z",
     "firstCommit": "2026-06-15T18:44:39Z",
-    "recentCommitCount": 100,
+    "recentCommitCount": 109,
     "weeklyHistogram": [
       0,
       0,
@@ -1356,17 +1516,17 @@
       0,
       0,
       0,
-      0,
-      0,
-      0,
-      0,
-      9,
-      26,
-      18,
-      11,
-      24,
+      2,
+      10,
+      23,
+      20,
+      12,
+      21,
       4,
-      8
+      10,
+      6,
+      0,
+      1
     ]
   }
 }

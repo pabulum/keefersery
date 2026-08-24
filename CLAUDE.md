@@ -105,19 +105,41 @@ mark after someone edits the SVG. `ICON_SIZES` there, the `<link>` tags in `Base
 and `site.webmanifest.ts` have to agree.
 
 **The `overrides` block exists to keep `npm audit` at zero, and CI gates on that.**
-`@lhci/cli` carries a deep transitive tree that pulled in 10 advisories — all of them
-reachable only from three leaf packages (`brace-expansion` DoS, `tmp` symlink/traversal,
-`uuid` buffer bounds). The overrides pin those three to patched majors. Notes:
+`@lhci/cli` carries a deep transitive tree and is the source of every advisory this repo
+has ever had to override. Each entry pins one leaf to a patched version that its parent's
+declared range would not have reached on its own:
+
+- `tmp` — symlink/traversal. `@lhci/cli` asks for `^0.1.0`; the fix is in 0.2.x.
+- `uuid` — buffer bounds in v3/v5/v6. `@lhci/cli` asks for `^8.3.1`.
+- `@puppeteer/browsers` — the one that is not a simple leaf pin, see below.
+
+`extract-zip` has **no patched version at all** — the advisory covers `*`, and 2.0.1 is
+still the latest release. The only escape is a parent that stopped depending on it, which
+`@puppeteer/browsers@3` did (it extracts with `modern-tar` now). `puppeteer-core@24`
+pins `@puppeteer/browsers` at an exact `2.13.2`, so this override deliberately crosses an
+exact pin and a major boundary. It holds because `lhci collect` launches Chrome through
+`chrome-launcher` and never enters puppeteer's browser-download path — verified by a full
+`lhci autorun`, which is the check to re-run if this ever looks suspect.
+
+The rejected alternative was overriding `lighthouse` to 13.x, which is also patched.
+It crosses `@lhci/utils`' exact `lighthouse: 12.6.1` pin in the same way but lands
+somewhere far worse: a Lighthouse major moves scoring and audit ids, and every threshold
+in `lighthouserc.json` is asserted against them. Swapping a leaf that is never called
+beats swapping the thing the budgets are written in terms of.
+
+Notes:
 
 - `npm audit fix --force` wants to "fix" this by installing `@lhci/cli@0.1.0` — a
-  downgrade from 0.15 to 0.1. Never run it here.
-- The overrides are tree-wide, so they also apply to prettier, Astro and Playwright,
-  which share the same `brace-expansion`/`minimatch`/`glob` chain. All four suites plus a
-  full `lhci autorun` were verified against them before this landed. Re-verify if you
-  change them.
+  downgrade from 0.15 to 0.1. Never run it here. Plain `npm audit fix` is fine and is
+  usually the right first move: advisories whose parents already allow a patched version
+  need a lockfile bump, not an override.
+- The overrides are tree-wide, so they also reach prettier, Astro and Playwright. All
+  four suites plus a full `lhci autorun` were verified against them before this landed.
+  Re-verify if you change them.
 - Dependabot will not bump an override. When `@lhci/cli` updates its own dependencies,
   drop the corresponding entry and confirm `npm audit` is still clean — overrides are a
-  patch over someone else's lockfile, not a permanent fixture.
+  patch over someone else's lockfile, not a permanent fixture. `brace-expansion` was
+  dropped exactly this way once the `minimatch`/`glob` chain reached a patched 1.1.18.
 
 **`src/data/activity-cache.json` is generated but committed.** It is the fallback when
 the GitHub API is unreachable, so the build succeeds with slightly stale numbers instead
