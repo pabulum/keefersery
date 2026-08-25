@@ -53,6 +53,15 @@ jobs:
           # Internal hrefs resolve against dist/ as plain files, so a broken in-site link
           # is caught alongside the outbound ones.
           #
+          # That is only true because of `--root-dir`, and it must be an absolute path.
+          # Without it lychee cannot resolve a root-relative href at all — `/rss.xml`,
+          # `/favicon.svg`, every `/_astro/*` asset — and reports each one as an error.
+          # It did, weekly, for a month: 34 errors and 30 unique links checked, where the
+          # same run with a root dir reaches 37 links and no errors. The failure was
+          # doubly bad, because the eight it could not resolve were exactly the internal
+          # ones this comment claims to cover, so the line above was false until this
+          # argument existed.
+          #
           # `--exclude` covers the dev-server URLs quoted in the README's command block;
           # they are documentation, not links, and nothing is listening on that port here.
           args: >-
@@ -60,6 +69,7 @@ jobs:
             --max-retries 2
             --timeout 20
             --accept 200,206,301,302,303,307,308
+            --root-dir '${{ github.workspace }}/dist'
             --exclude '^http://localhost'
             --exclude '^https?://127\.0\.0\.1'
             'dist/**/*.html'
@@ -69,6 +79,29 @@ jobs:
 
       # An issue rather than a failed run: a dead link is something to go and fix, and a
       # red cron on a repo nobody is watching is not a notification.
+      #
+      # Reusing the open one rather than filing a new one every Monday. Left alone this
+      # step opens one issue per run for as long as the condition lasts, which is how
+      # four identical reports of the same non-problem accumulated between Aug 3 and
+      # Aug 24. Same rule as the alarms in deploy.yml and freshness.yml: one issue per
+      # standing condition, kept current.
+      - name: Find the open link-rot issue, if there is one
+        id: existing
+        if: steps.lychee.outputs.exit_code != 0
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const { data } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'link-rot',
+            });
+            // Empty string means "no existing issue", which create-issue-from-file
+            // reads as "create a new one".
+            return data.length ? String(data[0].number) : '';
+
       - name: Open or update an issue when links are broken
         if: steps.lychee.outputs.exit_code != 0
         uses: peter-evans/create-issue-from-file@v6
@@ -76,6 +109,7 @@ jobs:
           title: Broken links found on keefersery.com
           content-filepath: lychee.md
           labels: link-rot
+          issue-number: ${{ steps.existing.outputs.result }}
 
       - name: Close the issue once links are healthy
         if: steps.lychee.outputs.exit_code == 0

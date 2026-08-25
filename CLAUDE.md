@@ -174,6 +174,12 @@ Two alarms because they fail differently and neither subsumes the other:
   deployed build is over 36 hours old. It answers "are the bytes on the domain current",
   which is the claim that actually failed, and it does not care why the answer is no.
 
+All three of these — plus `links.yml` — keep **one** issue per standing condition and
+update it, rather than filing a fresh one per run. A weekly cron that opens an issue
+every time it fires produces a pile of identical reports nobody reads, which is the same
+silence the alarm was built to break; `links.yml` had accumulated four before this rule
+was applied to it.
+
 The 36h threshold alarms on the second consecutive missed night, not the first: GitHub's
 cron drifts by hours (observed Deploy starts range from 06:41 to 09:53), and an alarm that
 cries wolf at every delayed run gets filtered into the same silence it was built to break.
