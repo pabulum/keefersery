@@ -24,9 +24,9 @@ jobs:
       issues: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -71,7 +71,7 @@ jobs:
       # red cron on a repo nobody is watching is not a notification.
       - name: Open or update an issue when links are broken
         if: steps.lychee.outputs.exit_code != 0
-        uses: peter-evans/create-issue-from-file@v5
+        uses: peter-evans/create-issue-from-file@v6
         with:
           title: Broken links found on keefersery.com
           content-filepath: lychee.md
@@ -79,7 +79,7 @@ jobs:
 
       - name: Close the issue once links are healthy
         if: steps.lychee.outputs.exit_code == 0
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { data: open } = await github.rest.issues.listForRepo({
